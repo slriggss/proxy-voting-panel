@@ -1,13 +1,13 @@
 {
   "headline": {
-    "votes": 303589,
+    "votes": 301734,
     "funds": 22,
     "families": 10,
-    "companies": 2083,
+    "companies": 2015,
     "quarters": 12,
     "firstQuarter": "2023-Q3",
     "lastQuarter": "2026-Q2",
-    "shareholderVotes": 17792
+    "shareholderVotes": 17648
   },
   "siblings": {
     "pairs": [
@@ -770,8 +770,8 @@
       "style": "Active",
       "label": "ESG",
       "all": {
-        "pct": 51.1,
-        "n": 174
+        "pct": 74.8,
+        "n": 119
       },
       "bySeason": {
         "2024": {
@@ -783,17 +783,17 @@
           "n": 49
         },
         "2026": {
-          "pct": 0,
-          "n": 55
+          "pct": null,
+          "n": 0
         }
       },
       "antiEsg": {
         "pct": 0,
-        "n": 45
+        "n": 25
       },
       "governance": {
-        "pct": 44.1,
-        "n": 179
+        "pct": 67.2,
+        "n": 116
       }
     },
     {
@@ -987,12 +987,12 @@
     {
       "group": "ESG families",
       "antiSupport": {
-        "pct": 3.2,
-        "n": 282
+        "pct": 3.4,
+        "n": 262
       },
       "proSupport": {
-        "pct": 75.1,
-        "n": 1463
+        "pct": 78,
+        "n": 1408
       }
     }
   ],
@@ -1082,8 +1082,8 @@
           "n": 49
         },
         "2026": {
-          "pct": 0,
-          "n": 55
+          "pct": null,
+          "n": 0
         }
       }
     },
@@ -1414,12 +1414,12 @@
       "style": "Active",
       "label": "ESG",
       "sayOnPay": {
-        "pct": 12.5,
-        "n": 408
+        "pct": 18.5,
+        "n": 275
       },
       "directors": {
-        "pct": 3.8,
-        "n": 4008
+        "pct": 5.8,
+        "n": 2671
       }
     },
     {
@@ -1480,20 +1480,20 @@
     {
       "group": "ESG families",
       "proEsg": {
-        "pct": 75.1,
-        "n": 1463
+        "pct": 78,
+        "n": 1408
       },
       "governance": {
-        "pct": 78.5,
-        "n": 1421
+        "pct": 82,
+        "n": 1358
       },
       "shareholderRights": {
-        "pct": 79.5,
-        "n": 259
+        "pct": 90.7,
+        "n": 226
       },
       "corporateGovernance": {
-        "pct": 81.5,
-        "n": 875
+        "pct": 84,
+        "n": 849
       }
     }
   ],
@@ -1563,15 +1563,15 @@
   ],
   "notes": {
     "impax2026": {
-      "shareholderVotes": 143,
-      "against": 142,
+      "shareholderVotes": 0,
+      "against": 0,
       "priorSupport": 62.3
     },
     "stanceCounts": {
-      "pro-ESG": 8115,
-      "anti-ESG": 1334,
-      "unclear": 750,
-      "governance": 7593
+      "pro-ESG": 8060,
+      "anti-ESG": 1314,
+      "unclear": 745,
+      "governance": 7529
     }
   }
 }

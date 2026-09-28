@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Proxy Voting Panel &mdash; How Fund Managers Vote</title>
-<meta name="description" content="How the Big Three, two large active managers, and ESG-branded fund families voted 303,589 proxy ballots, from SEC Form N-PX filings.">
+<meta name="description" content="How the Big Three, two large active managers, and ESG-branded fund families voted 301,734 proxy ballots, from SEC Form N-PX filings.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600;700&family=Fira+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap">
@@ -155,7 +155,7 @@
     <h2>Almost no fund votes for anti-ESG proposals &mdash; including the ones that vote against ESG proposals</h2>
     <p>
       Anti-ESG proposals received 0.0% support from every Big Three and active-manager fund in the panel
-      (706 and 345 votes). The ESG families gave them 3.2%. So the Big Three's low support for pro-ESG proposals
+      (706 and 345 votes). The ESG families gave them 3.4%. So the Big Three's low support for pro-ESG proposals
       is not a mirror image: they vote against shareholder proposals on environmental and social topics from
       both directions.
     </p>
@@ -172,9 +172,9 @@
       anti-ESG proposals are counted separately, the decline is not an artifact of a changing ballot mix.
     </p>
     <p>
-      The Impax U.S. Sustainable Economy Fund is the outlier: after supporting 74&ndash;76% of pro-ESG proposals in the
-      first two years, it voted against 142 of its 143 shareholder proposals in 2025&ndash;26. The filing records the
-      votes but not the reason.
+      Impax's 2025&ndash;26 filing is not shown: its vote column appears to hold management's recommendations rather
+      than the fund's votes (see &ldquo;About the data&rdquo;). In the two years it reported cleanly, Impax supported
+      74&ndash;76% of pro-ESG proposals.
     </p>
     <div class="chart-card"><div class="chart-holder"><canvas id="chart-specialists"></canvas></div></div>
     <p class="figure-note">Share of votes cast FOR on pro-ESG shareholder proposals, by reporting year.</p>
@@ -228,8 +228,8 @@
       ending June 2024, 2025, and 2026.
     </p>
     <p>
-      <strong>What one row is.</strong> One fund's vote on one proposal at one company meeting: 303,589 rows for
-      22 funds, 2,083 companies, and 12 calendar quarters of meetings (2023-Q3 to 2026-Q2). The funds are all U.S.
+      <strong>What one row is.</strong> One fund's vote on one proposal at one company meeting: 301,734 rows for
+      22 funds, 2,015 companies (share classes counted once), and 12 calendar quarters of meetings (2023-Q3 to 2026-Q2). The funds are all U.S.
       large-cap stock funds, chosen so they vote at largely the same companies.
     </p>
     <p>
@@ -238,6 +238,14 @@
       under their own chosen policy (pass-through voting) appear as small separate blocks; any block under 10% of
       the fund's largest block at a meeting is left out, so the data reflects the fund manager's own decision.
       Vote spellings are normalized. Details and counts are in the repository README.
+    </p>
+    <p>
+      <strong>Rows dropped, and why.</strong> Despite its name, the N-PX field labeled &ldquo;management
+      recommendation&rdquo; records whether each vote was for or against management; with-management rates use it
+      that way. One filing is left out: Impax's 2025&ndash;26 report (1,855 rows) shows FOR on every management item
+      and AGAINST on 142 of 143 shareholder proposals &mdash; management's usual position everywhere &mdash; while its
+      own for/against-management field marks 114 director votes as against management. The two fields contradict
+      each other, so the filing is excluded rather than reinterpreted; its rows remain in <code>data/votes.csv</code>.
     </p>
     <p>
       <strong>Proposal direction.</strong> The SEC categories say what a proposal is about but not which way it

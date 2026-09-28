@@ -17,7 +17,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { loadVotes, ROOT } = require('./load_votes');
+const { loadVotes, companyNames, ROOT } = require('./load_votes');
 
 const rows = loadVotes();
 const SEASONS = ['2024', '2025', '2026'];
@@ -47,7 +47,7 @@ findings.headline = {
   votes: rows.length,
   funds: FUND_ORDER.length,
   families: new Set(rows.map(r => r.family)).size,
-  companies: new Set(rows.map(r => r.cusip || r.isin || r.issuer)).size,
+  companies: new Set(rows.map(companyNames(rows))).size, // share classes count once
   quarters: new Set(rows.map(r => r.quarter)).size,
   firstQuarter: [...new Set(rows.map(r => r.quarter))].sort()[0],
   lastQuarter: [...new Set(rows.map(r => r.quarter))].sort().pop(),

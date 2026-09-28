@@ -215,8 +215,14 @@ function parseTable(xml, filing, onRow) {
     // unless nothing else was cast.
     const positions = [...sharesBy.entries()].sort((a, b) => b[1] - a[1]);
     const main = (positions.find(([how]) => !NOT_A_POSITION.has(how)) || positions[0])[0];
-    const mgmtRec = (row.records.find(r => r.how === main && !NOT_A_POSITION.has(r.mgmt)) ||
-                     row.records.find(r => !NOT_A_POSITION.has(r.mgmt)) || { mgmt: 'NONE' }).mgmt;
+    // Despite its name, the N-PX <managementRecommendation> element records
+    // whether the vote was FOR or AGAINST management's recommendation, not the
+    // recommendation itself: every filing here marks votes against directors
+    // AGAINST (management always recommends FOR its nominees) and funds'
+    // AGAINST votes on shareholder proposals FOR. Take the flag that goes with
+    // the main position.
+    const vsMgmt = (row.records.find(r => r.how === main && !NOT_A_POSITION.has(r.mgmt)) ||
+                    row.records.find(r => !NOT_A_POSITION.has(r.mgmt)) || { mgmt: 'NONE' }).mgmt;
     const [mm, dd, yyyy] = row.meeting.split('/');
     const source = tag(block, 'voteSource').toUpperCase();
     const castPositions = positions.filter(([how]) => !NOT_A_POSITION.has(how));
@@ -238,8 +244,8 @@ function parseTable(xml, filing, onRow) {
       category: row.categories[0] || 'UNCATEGORIZED',
       all_categories: row.categories.join(' | '),
       vote: main,
-      mgmt_rec: mgmtRec,
-      with_mgmt: NOT_A_POSITION.has(mgmtRec) || mgmtRec === 'NONE' || NOT_A_POSITION.has(main) ? '' : (main === mgmtRec ? 'Y' : 'N'),
+      vs_mgmt: vsMgmt,
+      with_mgmt: NOT_A_POSITION.has(main) ? '' : vsMgmt === 'FOR' ? 'Y' : vsMgmt === 'AGAINST' ? 'N' : '',
       split_vote: castPositions.length > 1 ? 'Y' : 'N',
       shares_voted: row.records.reduce((t, r) => t + r.shares, 0),
       shares_for: sharesBy.get('FOR') || 0,
@@ -252,7 +258,7 @@ function parseTable(xml, filing, onRow) {
 }
 
 const COLUMNS = ['season', 'quarter', 'meeting_date', 'group', 'family', 'fund', 'series_id', 'style', 'label',
-  'issuer', 'cusip', 'isin', 'proposal', 'proponent', 'category', 'all_categories', 'vote', 'mgmt_rec',
+  'issuer', 'cusip', 'isin', 'proposal', 'proponent', 'category', 'all_categories', 'vote', 'vs_mgmt',
   'with_mgmt', 'split_vote', 'shares_voted', 'shares_for', 'shares_against', 'shares_on_loan', 'accession'];
 const csvCell = v => { const s = String(v ?? ''); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
 
