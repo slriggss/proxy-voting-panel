@@ -1,0 +1,5 @@
+# Raw SEC downloads are large and fully re-creatable with scripts/fetch_npx.js
+data/raw/
+node_modules/
+.DS_Store
+Thumbs.db
