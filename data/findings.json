@@ -1,0 +1,1577 @@
+{
+  "headline": {
+    "votes": 303589,
+    "funds": 22,
+    "families": 10,
+    "companies": 2083,
+    "quarters": 12,
+    "firstQuarter": "2023-Q3",
+    "lastQuarter": "2026-Q2",
+    "shareholderVotes": 17792
+  },
+  "siblings": {
+    "pairs": [
+      {
+        "a": "Vanguard 500 Index Fund",
+        "b": "Vanguard ESG U.S. Stock ETF",
+        "shared": 15421,
+        "differPct": 0.2,
+        "shShared": 1002,
+        "shDifferPct": 0.4,
+        "family": "Vanguard"
+      },
+      {
+        "a": "Vanguard 500 Index Fund",
+        "b": "Vanguard FTSE Social Index Fund",
+        "shared": 14463,
+        "differPct": 0.2,
+        "shShared": 978,
+        "shDifferPct": 0.5,
+        "family": "Vanguard"
+      },
+      {
+        "a": "iShares Core S&P 500 ETF",
+        "b": "iShares ESG Aware MSCI USA ETF",
+        "shared": 10784,
+        "differPct": 0.1,
+        "shShared": 860,
+        "shDifferPct": 0.1,
+        "family": "BlackRock"
+      },
+      {
+        "a": "iShares Core S&P 500 ETF",
+        "b": "iShares ESG Screened S&P 500 ETF",
+        "shared": 17460,
+        "differPct": 0,
+        "shShared": 1097,
+        "shDifferPct": 0.2,
+        "family": "BlackRock"
+      },
+      {
+        "a": "iShares Core S&P 500 ETF",
+        "b": "iShares Paris-Aligned Climate MSCI USA ETF",
+        "shared": 6679,
+        "differPct": 0.3,
+        "shShared": 529,
+        "shDifferPct": 3,
+        "family": "BlackRock"
+      },
+      {
+        "a": "SPDR Portfolio S&P 500 ETF",
+        "b": "SPDR S&P 500 ESG ETF",
+        "shared": 12405,
+        "differPct": 0,
+        "shShared": 829,
+        "shDifferPct": 0.2,
+        "family": "State Street"
+      },
+      {
+        "a": "SPDR Portfolio S&P 500 ETF",
+        "b": "SPDR MSCI USA Gender Diversity Index ETF",
+        "shared": 8258,
+        "differPct": 0,
+        "shShared": 574,
+        "shDifferPct": 0.3,
+        "family": "State Street"
+      },
+      {
+        "a": "Fidelity 500 Index Fund",
+        "b": "Fidelity U.S. Sustainability Index Fund",
+        "shared": 9926,
+        "differPct": 0,
+        "shShared": 671,
+        "shDifferPct": 0,
+        "family": "Fidelity"
+      },
+      {
+        "a": "Fidelity Contrafund",
+        "b": "Fidelity Sustainable U.S. Equity Fund",
+        "shared": 2101,
+        "differPct": 0.7,
+        "shShared": 252,
+        "shDifferPct": 5.6,
+        "family": "Fidelity"
+      }
+    ],
+    "reference": {
+      "a": "Vanguard 500 Index Fund",
+      "b": "Calvert US Large-Cap Core Responsible Index Fund",
+      "shared": 15283,
+      "differPct": 25.2,
+      "shShared": 995,
+      "shDifferPct": 64.3
+    }
+  },
+  "proEsgByFund": [
+    {
+      "fund": "Vanguard 500 Index Fund",
+      "family": "Vanguard",
+      "group": "Big Three",
+      "style": "Index",
+      "label": "Conventional",
+      "all": {
+        "pct": 0,
+        "n": 579
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 0,
+          "n": 280
+        },
+        "2025": {
+          "pct": 0,
+          "n": 183
+        },
+        "2026": {
+          "pct": 0,
+          "n": 116
+        }
+      },
+      "antiEsg": {
+        "pct": 0,
+        "n": 86
+      },
+      "governance": {
+        "pct": 13.1,
+        "n": 565
+      }
+    },
+    {
+      "fund": "Vanguard ESG U.S. Stock ETF",
+      "family": "Vanguard",
+      "group": "Big Three",
+      "style": "Index",
+      "label": "ESG",
+      "all": {
+        "pct": 0,
+        "n": 502
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 0,
+          "n": 240
+        },
+        "2025": {
+          "pct": 0,
+          "n": 156
+        },
+        "2026": {
+          "pct": 0,
+          "n": 106
+        }
+      },
+      "antiEsg": {
+        "pct": 0,
+        "n": 80
+      },
+      "governance": {
+        "pct": 18.4,
+        "n": 593
+      }
+    },
+    {
+      "fund": "Vanguard FTSE Social Index Fund",
+      "family": "Vanguard",
+      "group": "Big Three",
+      "style": "Index",
+      "label": "ESG",
+      "all": {
+        "pct": 0,
+        "n": 443
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 0,
+          "n": 215
+        },
+        "2025": {
+          "pct": 0,
+          "n": 139
+        },
+        "2026": {
+          "pct": 0,
+          "n": 89
+        }
+      },
+      "antiEsg": {
+        "pct": 0,
+        "n": 75
+      },
+      "governance": {
+        "pct": 14.4,
+        "n": 443
+      }
+    },
+    {
+      "fund": "iShares Core S&P 500 ETF",
+      "family": "BlackRock",
+      "group": "Big Three",
+      "style": "Index",
+      "label": "Conventional",
+      "all": {
+        "pct": 1.9,
+        "n": 584
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 2.8,
+          "n": 285
+        },
+        "2025": {
+          "pct": 1.1,
+          "n": 185
+        },
+        "2026": {
+          "pct": 0.9,
+          "n": 114
+        }
+      },
+      "antiEsg": {
+        "pct": 0,
+        "n": 83
+      },
+      "governance": {
+        "pct": 10.2,
+        "n": 531
+      }
+    },
+    {
+      "fund": "iShares ESG Aware MSCI USA ETF",
+      "family": "BlackRock",
+      "group": "Big Three",
+      "style": "Index",
+      "label": "ESG",
+      "all": {
+        "pct": 1.9,
+        "n": 425
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 3.8,
+          "n": 211
+        },
+        "2025": {
+          "pct": 0,
+          "n": 120
+        },
+        "2026": {
+          "pct": 0,
+          "n": 94
+        }
+      },
+      "antiEsg": {
+        "pct": 0,
+        "n": 70
+      },
+      "governance": {
+        "pct": 9.3,
+        "n": 344
+      }
+    },
+    {
+      "fund": "iShares ESG Screened S&P 500 ETF",
+      "family": "BlackRock",
+      "group": "Big Three",
+      "style": "Index",
+      "label": "ESG",
+      "all": {
+        "pct": 2,
+        "n": 508
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 2.9,
+          "n": 240
+        },
+        "2025": {
+          "pct": 1.3,
+          "n": 160
+        },
+        "2026": {
+          "pct": 0.9,
+          "n": 108
+        }
+      },
+      "antiEsg": {
+        "pct": 0,
+        "n": 75
+      },
+      "governance": {
+        "pct": 10.6,
+        "n": 482
+      }
+    },
+    {
+      "fund": "iShares Paris-Aligned Climate MSCI USA ETF",
+      "family": "BlackRock",
+      "group": "Big Three",
+      "style": "Index",
+      "label": "ESG",
+      "all": {
+        "pct": 9.3,
+        "n": 257
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 5.2,
+          "n": 135
+        },
+        "2025": {
+          "pct": 14.3,
+          "n": 77
+        },
+        "2026": {
+          "pct": 13.3,
+          "n": 45
+        }
+      },
+      "antiEsg": {
+        "pct": 0,
+        "n": 40
+      },
+      "governance": {
+        "pct": 14,
+        "n": 229
+      }
+    },
+    {
+      "fund": "SPDR Portfolio S&P 500 ETF",
+      "family": "State Street",
+      "group": "Big Three",
+      "style": "Index",
+      "label": "Conventional",
+      "all": {
+        "pct": 10.5,
+        "n": 564
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 12.6,
+          "n": 277
+        },
+        "2025": {
+          "pct": 8.2,
+          "n": 183
+        },
+        "2026": {
+          "pct": 8.7,
+          "n": 104
+        }
+      },
+      "antiEsg": {
+        "pct": 0,
+        "n": 83
+      },
+      "governance": {
+        "pct": 20.2,
+        "n": 550
+      }
+    },
+    {
+      "fund": "SPDR S&P 500 ESG ETF",
+      "family": "State Street",
+      "group": "Big Three",
+      "style": "Index",
+      "label": "ESG",
+      "all": {
+        "pct": 9.2,
+        "n": 379
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 12.2,
+          "n": 196
+        },
+        "2025": {
+          "pct": 6.1,
+          "n": 114
+        },
+        "2026": {
+          "pct": 5.8,
+          "n": 69
+        }
+      },
+      "antiEsg": {
+        "pct": 0,
+        "n": 65
+      },
+      "governance": {
+        "pct": 17.7,
+        "n": 344
+      }
+    },
+    {
+      "fund": "SPDR MSCI USA Gender Diversity Index ETF",
+      "family": "State Street",
+      "group": "Big Three",
+      "style": "Index",
+      "label": "ESG",
+      "all": {
+        "pct": 9.3,
+        "n": 270
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 14.6,
+          "n": 144
+        },
+        "2025": {
+          "pct": 4,
+          "n": 75
+        },
+        "2026": {
+          "pct": 2,
+          "n": 51
+        }
+      },
+      "antiEsg": {
+        "pct": 0,
+        "n": 49
+      },
+      "governance": {
+        "pct": 15.8,
+        "n": 240
+      }
+    },
+    {
+      "fund": "Fidelity 500 Index Fund",
+      "family": "Fidelity",
+      "group": "Active managers",
+      "style": "Index",
+      "label": "Conventional",
+      "all": {
+        "pct": 2.3,
+        "n": 573
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 4.7,
+          "n": 275
+        },
+        "2025": {
+          "pct": 0,
+          "n": 182
+        },
+        "2026": {
+          "pct": 0,
+          "n": 116
+        }
+      },
+      "antiEsg": {
+        "pct": 0,
+        "n": 86
+      },
+      "governance": {
+        "pct": 21.2,
+        "n": 561
+      }
+    },
+    {
+      "fund": "Fidelity Contrafund",
+      "family": "Fidelity",
+      "group": "Active managers",
+      "style": "Active",
+      "label": "Conventional",
+      "all": {
+        "pct": 14.5,
+        "n": 386
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 17.7,
+          "n": 186
+        },
+        "2025": {
+          "pct": 10.3,
+          "n": 107
+        },
+        "2026": {
+          "pct": 12.9,
+          "n": 93
+        }
+      },
+      "antiEsg": {
+        "pct": 0,
+        "n": 63
+      },
+      "governance": {
+        "pct": 28.4,
+        "n": 303
+      }
+    },
+    {
+      "fund": "Fidelity U.S. Sustainability Index Fund",
+      "family": "Fidelity",
+      "group": "Active managers",
+      "style": "Index",
+      "label": "ESG",
+      "all": {
+        "pct": 0.7,
+        "n": 281
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 1.6,
+          "n": 123
+        },
+        "2025": {
+          "pct": 0,
+          "n": 89
+        },
+        "2026": {
+          "pct": 0,
+          "n": 69
+        }
+      },
+      "antiEsg": {
+        "pct": 0,
+        "n": 50
+      },
+      "governance": {
+        "pct": 18.8,
+        "n": 325
+      }
+    },
+    {
+      "fund": "Fidelity Sustainable U.S. Equity Fund",
+      "family": "Fidelity",
+      "group": "Active managers",
+      "style": "Active",
+      "label": "ESG",
+      "all": {
+        "pct": 27.5,
+        "n": 167
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 25.4,
+          "n": 71
+        },
+        "2025": {
+          "pct": 32.7,
+          "n": 52
+        },
+        "2026": {
+          "pct": 25,
+          "n": 44
+        }
+      },
+      "antiEsg": {
+        "pct": 0,
+        "n": 34
+      },
+      "governance": {
+        "pct": 23.5,
+        "n": 115
+      }
+    },
+    {
+      "fund": "The Growth Fund of America",
+      "family": "Capital Group",
+      "group": "Active managers",
+      "style": "Active",
+      "label": "Conventional",
+      "all": {
+        "pct": 4.3,
+        "n": 374
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 5.4,
+          "n": 168
+        },
+        "2025": {
+          "pct": 2.5,
+          "n": 121
+        },
+        "2026": {
+          "pct": 4.7,
+          "n": 85
+        }
+      },
+      "antiEsg": {
+        "pct": 0,
+        "n": 55
+      },
+      "governance": {
+        "pct": 50.9,
+        "n": 269
+      }
+    },
+    {
+      "fund": "Washington Mutual Investors Fund",
+      "family": "Capital Group",
+      "group": "Active managers",
+      "style": "Active",
+      "label": "Conventional",
+      "all": {
+        "pct": 2.5,
+        "n": 359
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 3,
+          "n": 169
+        },
+        "2025": {
+          "pct": 2.5,
+          "n": 120
+        },
+        "2026": {
+          "pct": 1.4,
+          "n": 70
+        }
+      },
+      "antiEsg": {
+        "pct": 0,
+        "n": 57
+      },
+      "governance": {
+        "pct": 37.7,
+        "n": 257
+      }
+    },
+    {
+      "fund": "Parnassus Core Equity Fund",
+      "family": "Parnassus",
+      "group": "ESG families",
+      "style": "Active",
+      "label": "ESG",
+      "all": {
+        "pct": 68.3,
+        "n": 101
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 66.7,
+          "n": 45
+        },
+        "2025": {
+          "pct": 63.6,
+          "n": 33
+        },
+        "2026": {
+          "pct": 78.3,
+          "n": 23
+        }
+      },
+      "antiEsg": {
+        "pct": 4.3,
+        "n": 23
+      },
+      "governance": {
+        "pct": 65,
+        "n": 60
+      }
+    },
+    {
+      "fund": "Calvert US Large-Cap Core Responsible Index Fund",
+      "family": "Calvert",
+      "group": "ESG families",
+      "style": "Index",
+      "label": "ESG",
+      "all": {
+        "pct": 80.5,
+        "n": 502
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 86.1,
+          "n": 231
+        },
+        "2025": {
+          "pct": 81.5,
+          "n": 162
+        },
+        "2026": {
+          "pct": 67,
+          "n": 109
+        }
+      },
+      "antiEsg": {
+        "pct": 1.2,
+        "n": 82
+      },
+      "governance": {
+        "pct": 78.8,
+        "n": 537
+      }
+    },
+    {
+      "fund": "Calvert Equity Fund",
+      "family": "Calvert",
+      "group": "ESG families",
+      "style": "Active",
+      "label": "ESG",
+      "all": {
+        "pct": 62.3,
+        "n": 61
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 61.5,
+          "n": 26
+        },
+        "2025": {
+          "pct": 71.4,
+          "n": 21
+        },
+        "2026": {
+          "pct": 50,
+          "n": 14
+        }
+      },
+      "antiEsg": {
+        "pct": 0,
+        "n": 12
+      },
+      "governance": {
+        "pct": 64.4,
+        "n": 73
+      }
+    },
+    {
+      "fund": "Domini Impact Equity Fund",
+      "family": "Domini",
+      "group": "ESG families",
+      "style": "Active",
+      "label": "ESG",
+      "all": {
+        "pct": 79.9,
+        "n": 323
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 81.9,
+          "n": 160
+        },
+        "2025": {
+          "pct": 83.7,
+          "n": 104
+        },
+        "2026": {
+          "pct": 67.8,
+          "n": 59
+        }
+      },
+      "antiEsg": {
+        "pct": 9.2,
+        "n": 65
+      },
+      "governance": {
+        "pct": 88.3,
+        "n": 274
+      }
+    },
+    {
+      "fund": "Impax US Sustainable Economy Fund",
+      "family": "Impax",
+      "group": "ESG families",
+      "style": "Active",
+      "label": "ESG",
+      "all": {
+        "pct": 51.1,
+        "n": 174
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 74.3,
+          "n": 70
+        },
+        "2025": {
+          "pct": 75.5,
+          "n": 49
+        },
+        "2026": {
+          "pct": 0,
+          "n": 55
+        }
+      },
+      "antiEsg": {
+        "pct": 0,
+        "n": 45
+      },
+      "governance": {
+        "pct": 44.1,
+        "n": 179
+      }
+    },
+    {
+      "fund": "Green Century Equity Fund",
+      "family": "Green Century",
+      "group": "ESG families",
+      "style": "Active",
+      "label": "ESG",
+      "all": {
+        "pct": 79.5,
+        "n": 302
+      },
+      "bySeason": {
+        "2024": {
+          "pct": 81.5,
+          "n": 135
+        },
+        "2025": {
+          "pct": 82.3,
+          "n": 96
+        },
+        "2026": {
+          "pct": 71.8,
+          "n": 71
+        }
+      },
+      "antiEsg": {
+        "pct": 1.8,
+        "n": 55
+      },
+      "governance": {
+        "pct": 95.6,
+        "n": 298
+      }
+    }
+  ],
+  "ballot": [
+    {
+      "season": "2024",
+      "total": 539,
+      "pro": 279,
+      "anti": 36,
+      "unclear": 21,
+      "governance": 203,
+      "antiShareOfES": 10.6,
+      "perFund": [
+        {
+          "fund": "Vanguard 500 Index Fund",
+          "total": 542,
+          "pro": 280,
+          "anti": 36,
+          "unclear": 21,
+          "governance": 205
+        },
+        {
+          "fund": "iShares Core S&P 500 ETF",
+          "total": 538,
+          "pro": 285,
+          "anti": 35,
+          "unclear": 20,
+          "governance": 198
+        },
+        {
+          "fund": "SPDR Portfolio S&P 500 ETF",
+          "total": 539,
+          "pro": 277,
+          "anti": 36,
+          "unclear": 21,
+          "governance": 205
+        },
+        {
+          "fund": "Fidelity 500 Index Fund",
+          "total": 537,
+          "pro": 275,
+          "anti": 36,
+          "unclear": 21,
+          "governance": 205
+        }
+      ]
+    },
+    {
+      "season": "2025",
+      "total": 388,
+      "pro": 183,
+      "anti": 22,
+      "unclear": 16,
+      "governance": 167,
+      "antiShareOfES": 9.9,
+      "perFund": [
+        {
+          "fund": "Vanguard 500 Index Fund",
+          "total": 392,
+          "pro": 183,
+          "anti": 22,
+          "unclear": 16,
+          "governance": 171
+        },
+        {
+          "fund": "iShares Core S&P 500 ETF",
+          "total": 376,
+          "pro": 185,
+          "anti": 22,
+          "unclear": 16,
+          "governance": 153
+        },
+        {
+          "fund": "SPDR Portfolio S&P 500 ETF",
+          "total": 392,
+          "pro": 183,
+          "anti": 22,
+          "unclear": 16,
+          "governance": 171
+        },
+        {
+          "fund": "Fidelity 500 Index Fund",
+          "total": 391,
+          "pro": 182,
+          "anti": 22,
+          "unclear": 16,
+          "governance": 171
+        }
+      ]
+    },
+    {
+      "season": "2026",
+      "total": 332,
+      "pro": 113,
+      "anti": 27,
+      "unclear": 10,
+      "governance": 182,
+      "antiShareOfES": 17.9,
+      "perFund": [
+        {
+          "fund": "Vanguard 500 Index Fund",
+          "total": 343,
+          "pro": 116,
+          "anti": 28,
+          "unclear": 10,
+          "governance": 189
+        },
+        {
+          "fund": "iShares Core S&P 500 ETF",
+          "total": 331,
+          "pro": 114,
+          "anti": 26,
+          "unclear": 11,
+          "governance": 180
+        },
+        {
+          "fund": "SPDR Portfolio S&P 500 ETF",
+          "total": 313,
+          "pro": 104,
+          "anti": 25,
+          "unclear": 10,
+          "governance": 174
+        },
+        {
+          "fund": "Fidelity 500 Index Fund",
+          "total": 339,
+          "pro": 116,
+          "anti": 28,
+          "unclear": 10,
+          "governance": 185
+        }
+      ]
+    }
+  ],
+  "antiEsg": [
+    {
+      "group": "Big Three",
+      "antiSupport": {
+        "pct": 0,
+        "n": 706
+      },
+      "proSupport": {
+        "pct": 3.8,
+        "n": 4511
+      }
+    },
+    {
+      "group": "Active managers",
+      "antiSupport": {
+        "pct": 0,
+        "n": 345
+      },
+      "proSupport": {
+        "pct": 6.6,
+        "n": 2140
+      }
+    },
+    {
+      "group": "ESG families",
+      "antiSupport": {
+        "pct": 3.2,
+        "n": 282
+      },
+      "proSupport": {
+        "pct": 75.1,
+        "n": 1463
+      }
+    }
+  ],
+  "esgSpecialists": [
+    {
+      "fund": "Parnassus Core Equity Fund",
+      "family": "Parnassus",
+      "bySeason": {
+        "2024": {
+          "pct": 66.7,
+          "n": 45
+        },
+        "2025": {
+          "pct": 63.6,
+          "n": 33
+        },
+        "2026": {
+          "pct": 78.3,
+          "n": 23
+        }
+      }
+    },
+    {
+      "fund": "Calvert US Large-Cap Core Responsible Index Fund",
+      "family": "Calvert",
+      "bySeason": {
+        "2024": {
+          "pct": 86.1,
+          "n": 231
+        },
+        "2025": {
+          "pct": 81.5,
+          "n": 162
+        },
+        "2026": {
+          "pct": 67,
+          "n": 109
+        }
+      }
+    },
+    {
+      "fund": "Calvert Equity Fund",
+      "family": "Calvert",
+      "bySeason": {
+        "2024": {
+          "pct": 61.5,
+          "n": 26
+        },
+        "2025": {
+          "pct": 71.4,
+          "n": 21
+        },
+        "2026": {
+          "pct": 50,
+          "n": 14
+        }
+      }
+    },
+    {
+      "fund": "Domini Impact Equity Fund",
+      "family": "Domini",
+      "bySeason": {
+        "2024": {
+          "pct": 81.9,
+          "n": 160
+        },
+        "2025": {
+          "pct": 83.7,
+          "n": 104
+        },
+        "2026": {
+          "pct": 67.8,
+          "n": 59
+        }
+      }
+    },
+    {
+      "fund": "Impax US Sustainable Economy Fund",
+      "family": "Impax",
+      "bySeason": {
+        "2024": {
+          "pct": 74.3,
+          "n": 70
+        },
+        "2025": {
+          "pct": 75.5,
+          "n": 49
+        },
+        "2026": {
+          "pct": 0,
+          "n": 55
+        }
+      }
+    },
+    {
+      "fund": "Green Century Equity Fund",
+      "family": "Green Century",
+      "bySeason": {
+        "2024": {
+          "pct": 81.5,
+          "n": 135
+        },
+        "2025": {
+          "pct": 82.3,
+          "n": 96
+        },
+        "2026": {
+          "pct": 71.8,
+          "n": 71
+        }
+      }
+    }
+  ],
+  "payAndBoards": [
+    {
+      "fund": "Vanguard 500 Index Fund",
+      "family": "Vanguard",
+      "group": "Big Three",
+      "style": "Index",
+      "label": "Conventional",
+      "sayOnPay": {
+        "pct": 1.1,
+        "n": 1481
+      },
+      "directors": {
+        "pct": 0.3,
+        "n": 14788
+      }
+    },
+    {
+      "fund": "Vanguard ESG U.S. Stock ETF",
+      "family": "Vanguard",
+      "group": "Big Three",
+      "style": "Index",
+      "label": "ESG",
+      "sayOnPay": {
+        "pct": 2.6,
+        "n": 3863
+      },
+      "directors": {
+        "pct": 1.6,
+        "n": 30282
+      }
+    },
+    {
+      "fund": "Vanguard FTSE Social Index Fund",
+      "family": "Vanguard",
+      "group": "Big Three",
+      "style": "Index",
+      "label": "ESG",
+      "sayOnPay": {
+        "pct": 1.7,
+        "n": 1201
+      },
+      "directors": {
+        "pct": 0.7,
+        "n": 11792
+      }
+    },
+    {
+      "fund": "iShares Core S&P 500 ETF",
+      "family": "BlackRock",
+      "group": "Big Three",
+      "style": "Index",
+      "label": "Conventional",
+      "sayOnPay": {
+        "pct": 2.8,
+        "n": 1436
+      },
+      "directors": {
+        "pct": 1.3,
+        "n": 14591
+      }
+    },
+    {
+      "fund": "iShares ESG Aware MSCI USA ETF",
+      "family": "BlackRock",
+      "group": "Big Three",
+      "style": "Index",
+      "label": "ESG",
+      "sayOnPay": {
+        "pct": 3.2,
+        "n": 838
+      },
+      "directors": {
+        "pct": 1.5,
+        "n": 8389
+      }
+    },
+    {
+      "fund": "iShares ESG Screened S&P 500 ETF",
+      "family": "BlackRock",
+      "group": "Big Three",
+      "style": "Index",
+      "label": "ESG",
+      "sayOnPay": {
+        "pct": 3,
+        "n": 1276
+      },
+      "directors": {
+        "pct": 1.4,
+        "n": 12876
+      }
+    },
+    {
+      "fund": "iShares Paris-Aligned Climate MSCI USA ETF",
+      "family": "BlackRock",
+      "group": "Big Three",
+      "style": "Index",
+      "label": "ESG",
+      "sayOnPay": {
+        "pct": 4.2,
+        "n": 554
+      },
+      "directors": {
+        "pct": 1.5,
+        "n": 5309
+      }
+    },
+    {
+      "fund": "SPDR Portfolio S&P 500 ETF",
+      "family": "State Street",
+      "group": "Big Three",
+      "style": "Index",
+      "label": "Conventional",
+      "sayOnPay": {
+        "pct": 3.9,
+        "n": 1448
+      },
+      "directors": {
+        "pct": 4.9,
+        "n": 14376
+      }
+    },
+    {
+      "fund": "SPDR S&P 500 ESG ETF",
+      "family": "State Street",
+      "group": "Big Three",
+      "style": "Index",
+      "label": "ESG",
+      "sayOnPay": {
+        "pct": 3.7,
+        "n": 901
+      },
+      "directors": {
+        "pct": 3.6,
+        "n": 9042
+      }
+    },
+    {
+      "fund": "SPDR MSCI USA Gender Diversity Index ETF",
+      "family": "State Street",
+      "group": "Big Three",
+      "style": "Index",
+      "label": "ESG",
+      "sayOnPay": {
+        "pct": 4.3,
+        "n": 649
+      },
+      "directors": {
+        "pct": 3.9,
+        "n": 6522
+      }
+    },
+    {
+      "fund": "Fidelity 500 Index Fund",
+      "family": "Fidelity",
+      "group": "Active managers",
+      "style": "Index",
+      "label": "Conventional",
+      "sayOnPay": {
+        "pct": 2.1,
+        "n": 1459
+      },
+      "directors": {
+        "pct": 0.9,
+        "n": 14506
+      }
+    },
+    {
+      "fund": "Fidelity Contrafund",
+      "family": "Fidelity",
+      "group": "Active managers",
+      "style": "Active",
+      "label": "Conventional",
+      "sayOnPay": {
+        "pct": 3.1,
+        "n": 640
+      },
+      "directors": {
+        "pct": 4.6,
+        "n": 7499
+      }
+    },
+    {
+      "fund": "Fidelity U.S. Sustainability Index Fund",
+      "family": "Fidelity",
+      "group": "Active managers",
+      "style": "Index",
+      "label": "ESG",
+      "sayOnPay": {
+        "pct": 1.5,
+        "n": 809
+      },
+      "directors": {
+        "pct": 0.5,
+        "n": 7863
+      }
+    },
+    {
+      "fund": "Fidelity Sustainable U.S. Equity Fund",
+      "family": "Fidelity",
+      "group": "Active managers",
+      "style": "Active",
+      "label": "ESG",
+      "sayOnPay": {
+        "pct": 1.3,
+        "n": 227
+      },
+      "directors": {
+        "pct": 2.7,
+        "n": 2408
+      }
+    },
+    {
+      "fund": "The Growth Fund of America",
+      "family": "Capital Group",
+      "group": "Active managers",
+      "style": "Active",
+      "label": "Conventional",
+      "sayOnPay": {
+        "pct": 18.4,
+        "n": 707
+      },
+      "directors": {
+        "pct": 1.2,
+        "n": 7519
+      }
+    },
+    {
+      "fund": "Washington Mutual Investors Fund",
+      "family": "Capital Group",
+      "group": "Active managers",
+      "style": "Active",
+      "label": "Conventional",
+      "sayOnPay": {
+        "pct": 7.3,
+        "n": 482
+      },
+      "directors": {
+        "pct": 0.8,
+        "n": 5554
+      }
+    },
+    {
+      "fund": "Parnassus Core Equity Fund",
+      "family": "Parnassus",
+      "group": "ESG families",
+      "style": "Active",
+      "label": "ESG",
+      "sayOnPay": {
+        "pct": 12.3,
+        "n": 114
+      },
+      "directors": {
+        "pct": 10,
+        "n": 1271
+      }
+    },
+    {
+      "fund": "Calvert US Large-Cap Core Responsible Index Fund",
+      "family": "Calvert",
+      "group": "ESG families",
+      "style": "Index",
+      "label": "ESG",
+      "sayOnPay": {
+        "pct": 65,
+        "n": 2299
+      },
+      "directors": {
+        "pct": 25.8,
+        "n": 19700
+      }
+    },
+    {
+      "fund": "Calvert Equity Fund",
+      "family": "Calvert",
+      "group": "ESG families",
+      "style": "Active",
+      "label": "ESG",
+      "sayOnPay": {
+        "pct": 55.6,
+        "n": 135
+      },
+      "directors": {
+        "pct": 18.1,
+        "n": 1301
+      }
+    },
+    {
+      "fund": "Domini Impact Equity Fund",
+      "family": "Domini",
+      "group": "ESG families",
+      "style": "Active",
+      "label": "ESG",
+      "sayOnPay": {
+        "pct": 87.8,
+        "n": 666
+      },
+      "directors": {
+        "pct": 58.1,
+        "n": 6847
+      }
+    },
+    {
+      "fund": "Impax US Sustainable Economy Fund",
+      "family": "Impax",
+      "group": "ESG families",
+      "style": "Active",
+      "label": "ESG",
+      "sayOnPay": {
+        "pct": 12.5,
+        "n": 408
+      },
+      "directors": {
+        "pct": 3.8,
+        "n": 4008
+      }
+    },
+    {
+      "fund": "Green Century Equity Fund",
+      "family": "Green Century",
+      "group": "ESG families",
+      "style": "Active",
+      "label": "ESG",
+      "sayOnPay": {
+        "pct": 64.8,
+        "n": 1028
+      },
+      "directors": {
+        "pct": 52.4,
+        "n": 9531
+      }
+    }
+  ],
+  "governanceVsEsg": [
+    {
+      "group": "Big Three",
+      "proEsg": {
+        "pct": 3.8,
+        "n": 4511
+      },
+      "governance": {
+        "pct": 14.5,
+        "n": 4321
+      },
+      "shareholderRights": {
+        "pct": 37,
+        "n": 794
+      },
+      "corporateGovernance": {
+        "pct": 10.7,
+        "n": 2788
+      }
+    },
+    {
+      "group": "Active managers",
+      "proEsg": {
+        "pct": 6.6,
+        "n": 2140
+      },
+      "governance": {
+        "pct": 28.8,
+        "n": 1830
+      },
+      "shareholderRights": {
+        "pct": 69.4,
+        "n": 121
+      },
+      "corporateGovernance": {
+        "pct": 30.4,
+        "n": 1246
+      }
+    },
+    {
+      "group": "ESG families",
+      "proEsg": {
+        "pct": 75.1,
+        "n": 1463
+      },
+      "governance": {
+        "pct": 78.5,
+        "n": 1421
+      },
+      "shareholderRights": {
+        "pct": 79.5,
+        "n": 259
+      },
+      "corporateGovernance": {
+        "pct": 81.5,
+        "n": 875
+      }
+    }
+  ],
+  "capitalGroup": [
+    {
+      "fund": "The Growth Fund of America",
+      "governance": {
+        "2024": {
+          "pct": 43.2,
+          "n": 81
+        },
+        "2025": {
+          "pct": 44.7,
+          "n": 85
+        },
+        "2026": {
+          "pct": 62.1,
+          "n": 103
+        }
+      },
+      "proEsg": {
+        "2024": {
+          "pct": 5.4,
+          "n": 168
+        },
+        "2025": {
+          "pct": 2.5,
+          "n": 121
+        },
+        "2026": {
+          "pct": 4.7,
+          "n": 85
+        }
+      }
+    },
+    {
+      "fund": "Washington Mutual Investors Fund",
+      "governance": {
+        "2024": {
+          "pct": 31.4,
+          "n": 102
+        },
+        "2025": {
+          "pct": 31.9,
+          "n": 72
+        },
+        "2026": {
+          "pct": 50.6,
+          "n": 83
+        }
+      },
+      "proEsg": {
+        "2024": {
+          "pct": 3,
+          "n": 169
+        },
+        "2025": {
+          "pct": 2.5,
+          "n": 120
+        },
+        "2026": {
+          "pct": 1.4,
+          "n": 70
+        }
+      }
+    }
+  ],
+  "notes": {
+    "impax2026": {
+      "shareholderVotes": 143,
+      "against": 142,
+      "priorSupport": 62.3
+    },
+    "stanceCounts": {
+      "pro-ESG": 8115,
+      "anti-ESG": 1334,
+      "unclear": 750,
+      "governance": 7593
+    }
+  }
+}
