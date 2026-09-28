@@ -1,25 +1,57 @@
 # Proxy Voting Panel
 
-How the Big Three index managers, two large active managers, and a set of
+How the Big Three index managers, two large active managers, and six
 ESG-branded fund families vote their shares at company meetings, built from
 the SEC's structured Form N-PX proxy voting records.
 
-Work in progress: the data pipeline is in place; the report and dashboard
-are next.
+**Live site:** https://slriggss.github.io/proxy-voting-panel/
+**Repository:** https://github.com/slriggss/proxy-voting-panel
+
+The site has two pages: a report (`index.html`) with nine findings, each with
+a chart, and a dashboard (`dashboard.html`) that filters all 301,734 votes in
+the browser.
 
 ## Files
 
 | File | What it does |
 |---|---|
-| `scripts/fetch_npx.js` | Pulls the N-PX filings for the 22 funds below from SEC EDGAR, merges and cleans the vote records, and writes `data/votes.csv` plus the gzipped copy the repo stores. Run with `node scripts/fetch_npx.js` (Node 18+). |
-| `data/votes.csv.gz` | The data set (gzipped CSV, one row per fund per proposal). The uncompressed file is just over GitHub's 100 MB limit, so only the gzipped copy is committed. |
+| `index.html` | The report: headline numbers, nine findings with charts, and a closing section on the data and methods. |
+| `dashboard.html` | The dashboard: filter by fund family, fund label (conventional/ESG), management style (index/active), meeting quarter, proposal type, SEC topic, and company; switch the measure (% FOR, % with management, % against management, vote count) and the breakdown (group, family, fund, label); four summary numbers, four charts, and a vote table recompute live. Supports shareable filtered links, CSV export, and PNG export of any chart. |
+| `css/style.css` | Shared styles for both pages (design carried over from the ESG Country Panel project): typography, dark/light themes, the scroll-driven backdrop, chart-card animations, and the filter controls. |
+| `js/charts-common.js` | Shared Chart.js setup: colors and fonts, hover highlighting, data-driven chart annotations, the chart intro animations, and the card-opening effect. |
+| `js/report.js` | Builds the report's charts from `data/findings.json`. |
+| `js/dashboard.js` | All dashboard interactivity, working from `data/site_votes.json`. |
+| `js/effects.js` | Fade-in on scroll and the scroll-driven backdrop glow. |
+| `js/theme.js` | The light/dark toggle (dark by default). |
+| `scripts/fetch_npx.js` | Pulls the N-PX filings for the 22 funds from SEC EDGAR, merges and cleans the vote records, and writes `data/votes.csv` plus the gzipped copy the repo stores. |
+| `scripts/stance_rules.js` | Labels each shareholder proposal pro-ESG, anti-ESG, unclear, or governance, with the name of the rule that decided it. |
+| `scripts/classify_proposals.js` | Writes `data/proposal_stance_review.csv` so every stance label can be reviewed. |
+| `scripts/load_votes.js` | Shared loader used by the scripts below: reads the votes, adds stances, applies the one filing exclusion, and names companies consistently. |
+| `scripts/analyze.js` | Computes every number on the report page into `data/findings.json`. |
+| `scripts/build_site_data.js` | Writes `data/site_votes.json`, the compact column-by-column file the dashboard loads. |
+| `data/votes.csv.gz` | The full data set, one row per fund per proposal (gzipped; the CSV is just over GitHub's 100 MB limit). |
+| `data/findings.json` | The report's numbers. |
+| `data/site_votes.json` | The dashboard's data. |
+| `data/proposal_stance_review.csv` | Every distinct shareholder-proposal text with its stance and rule, for review. |
+
+To rebuild everything (Node 18+):
+
+```
+node scripts/fetch_npx.js          # EDGAR -> data/votes.csv(.gz)   (about 2.3 GB of downloads the first time)
+node scripts/classify_proposals.js # -> data/proposal_stance_review.csv
+node scripts/analyze.js            # -> data/findings.json
+node scripts/build_site_data.js    # -> data/site_votes.json
+```
+
+The site is static; serve the folder with any local web server
+(for example `npx serve .`) and open the printed address.
 
 ## Data
 
 **Source.** SEC EDGAR, Form N-PX (annual report of proxy voting record), in the
 structured XML format the SEC requires for votes cast on or after July 1, 2023.
 Each filing covers one July 1 - June 30 reporting year; the data set covers the
-2024, 2025 and 2026 reporting years (meetings from July 2023 through June 2026).
+years ending June 2024, 2025 and 2026 (meetings from July 2023 through June 2026).
 
 **Funds (22).** U.S. large-cap stock funds, so they vote at largely the same
 companies:
@@ -33,17 +65,19 @@ companies:
 | Active managers | Capital Group | The Growth Fund of America; Washington Mutual Investors Fund | - |
 | ESG families | Parnassus, Calvert (2), Domini, Impax, Green Century | - | Parnassus Core Equity; Calvert US Large-Cap Core Responsible Index; Calvert Equity; Domini Impact Equity; Impax US Sustainable Economy; Green Century Equity |
 
-**What one row is.** One fund's vote on one proposal at one company meeting:
-303,589 rows across 12 quarters (2023-Q3 to 2026-Q2), 2,074 companies. Columns:
-`season` (reporting year), `quarter` (calendar quarter of the meeting, the time
-column), `meeting_date`, `group`, `family`, `fund`, `series_id`, `style`
-(Index/Active), `label` (Conventional/ESG), `issuer`, `cusip`, `isin`,
-`proposal`, `proponent` (Management/Shareholder), `category` (the first SEC
-vote category), `all_categories`, `vote`, `mgmt_rec`, `with_mgmt`,
+**What one row is.** One fund's vote on one proposal at one company meeting.
+`data/votes.csv` has 303,589 rows; the analysis and dashboard use 301,734 of
+them (one filing is excluded, below), covering 2,015 companies and 12 quarters
+(2023-Q3 to 2026-Q2). Columns: `season` (reporting year), `quarter` (calendar
+quarter of the meeting, the time column), `meeting_date`, `group`, `family`,
+`fund`, `series_id`, `style` (Index/Active), `label` (Conventional/ESG),
+`issuer`, `cusip`, `isin`, `proposal`, `proponent` (Management/Shareholder),
+`category` (the first SEC vote category), `all_categories`, `vote`, `vs_mgmt`
+(whether the vote was FOR or AGAINST management, as filed), `with_mgmt` (Y/N),
 `split_vote`, `shares_voted`, `shares_for`, `shares_against` (against +
 withhold), `shares_on_loan`, `accession` (source filing).
 
-**How the raw records are cleaned** (all in `scripts/fetch_npx.js`):
+**How the raw records are cleaned** (`scripts/fetch_npx.js`):
 
 - *Which filing.* For each trust and reporting year, the newest N-PX or
   N-PX/A that contains a vote table for the fund is used.
@@ -64,12 +98,42 @@ withhold), `shares_on_loan`, `accession` (source filing).
   is the position with the most shares (ignoring "take no action"), and
   `split_vote` is Y. Spellings are normalized (e.g. `ONE YEAR`, `1 YEAR` and
   `1.0` all become `1 YEAR`).
-- *With or against management.* `with_mgmt` compares `vote` with the
-  management recommendation filed with it; it is blank when no recommendation
-  was given.
+- *With or against management.* Despite its name, the N-PX
+  `managementRecommendation` element records whether the vote was cast FOR or
+  AGAINST management's recommendation, not the recommendation itself. Every
+  filing here marks votes against directors (whom management always
+  recommends) AGAINST, and funds' AGAINST votes on shareholder proposals
+  (which management usually opposes) FOR. The column is therefore named
+  `vs_mgmt`, and `with_mgmt` is Y when it is FOR.
 
-EDGAR asks automated clients to identify themselves and to stay under 10
-requests per second. The fetch script sends a User-Agent with a contact
-address and paces its requests; if you re-run it, replace that address with
-your own. Raw downloads (about 2.3 GB) are cached in `data/raw/`, which is
-not committed.
+**Excluded filing.** Impax's 2025-26 report (accession 0001398344-26-016225,
+1,855 rows) is left out of the analysis and dashboard (`scripts/load_votes.js`),
+though its rows stay in `data/votes.csv`. Its vote column shows FOR on every
+management item and AGAINST on 142 of 143 shareholder proposals, which is
+management's usual position everywhere, while the same filing's
+for/against-management field marks 114 director votes as against management
+(Impax voted against 124 and 136 management items in the two prior years).
+The fields contradict each other, which suggests the vote column holds
+management's recommendations, so the filing is excluded rather than
+reinterpreted.
+
+**Proposal direction** (`scripts/stance_rules.js`). The SEC categories say what
+a proposal is about but not which way it points: "report on the effectiveness
+of DEI efforts" and "report on the risks created by DEI efforts" share a
+category but come from opposite camps. Each shareholder proposal is labeled by
+ordered keyword rules: anti-ESG first (their wording reuses ESG vocabulary),
+then topics filed by both camps (unclear, e.g. charitable giving), then
+pro-ESG, then governance/other. Every label records the rule that produced it;
+`data/proposal_stance_review.csv` lists all 2,184 distinct proposal texts.
+
+**Rates.** Support is the share of votes cast FOR, out of FOR + AGAINST +
+ABSTAIN + WITHHOLD. Opposition on management items (say-on-pay, directors) is
+the share of those votes that were not FOR. Rates pool fund-level votes, so a
+proposal voted by three funds counts three times. Head-to-head comparisons
+match proposals by company (CUSIP), meeting date and proposal text.
+
+**SEC access.** EDGAR asks automated clients to identify themselves and to stay
+under 10 requests per second. The fetch script sends a User-Agent with a
+contact address and paces its requests; if you re-run it, replace that address
+with your own. Raw downloads are cached in `data/raw/`, which is not
+committed.

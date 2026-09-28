@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard &mdash; Proxy Voting Panel</title>
+<meta name="description" content="Filter 301,734 fund proxy votes by fund family, fund type, quarter, proposal type, topic, and company.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600;700&family=Fira+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('esg-theme');
+      // Dark is the default look; a saved choice from the toggle wins.
+      document.documentElement.setAttribute('data-theme', t || 'dark');
+    } catch (e) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+</script>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">Proxy Voting Panel</a>
+    <div class="links">
+      <a href="index.html">Report</a>
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <button class="btn" id="theme-toggle" style="margin-left:20px;">&#127769; Dark</button>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="wrap">
+    <h1>Explore the votes</h1>
+    <p class="byline">Filter 301,734 fund votes and everything below &mdash; the summary numbers, the four charts,
+      and the table &mdash; recomputes in your browser.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="dashboard-toolbar">
+    <div class="filter-block">
+      <div class="filter-label" id="family-label">Fund family <small>select all that apply</small></div>
+      <div class="chip-row" id="family-chips" role="group" aria-labelledby="family-label"></div>
+    </div>
+    <div class="filter-split">
+      <div class="filter-block">
+        <div class="filter-label" id="label-label">Fund label</div>
+        <div class="chip-row" id="label-chips" role="group" aria-labelledby="label-label"></div>
+      </div>
+      <div class="filter-block">
+        <div class="filter-label" id="style-label">Management style</div>
+        <div class="chip-row" id="style-chips" role="group" aria-labelledby="style-label"></div>
+      </div>
+    </div>
+    <div class="filter-split">
+      <div class="filter-block">
+        <div class="filter-label">Meeting quarter <span class="readout" id="q-readout"></span></div>
+        <div class="range-slider" id="q-slider">
+          <div class="range-track"><div class="range-fill"></div></div>
+          <input type="range" id="f-q-from">
+          <input type="range" id="f-q-to">
+        </div>
+        <div class="range-ends"><span id="q-min"></span><span id="q-max"></span></div>
+      </div>
+      <div class="filter-block">
+        <label class="filter-label" for="f-company-search">Companies</label>
+        <div class="typeahead">
+          <div class="chip-row" id="company-chips"></div>
+          <input id="f-company-search" type="text" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="company-suggest">
+          <ul id="company-suggest" role="listbox" hidden></ul>
+        </div>
+      </div>
+    </div>
+    <div class="filter-block">
+      <div class="filter-label" id="type-label">Proposal type <small>who proposed it, and which way a shareholder proposal points</small></div>
+      <div class="chip-row" id="type-chips" role="group" aria-labelledby="type-label"></div>
+    </div>
+    <div class="filter-block">
+      <div class="filter-label" id="topic-label">Topic <small>SEC vote category</small></div>
+      <div class="chip-row" id="topic-chips" role="group" aria-labelledby="topic-label"></div>
+    </div>
+    <div class="toolbar-actions">
+      <button class="btn" id="btn-share">Copy shareable link</button>
+      <button class="btn" id="btn-export-csv" style="margin-left:8px;">Download filtered votes (CSV)</button>
+      <button class="btn" id="btn-reset" style="margin-left:8px;">Reset all filters</button>
+    </div>
+  </div>
+
+  <div class="stat-grid" id="summary-tiles">
+    <div class="stat-tile"><div class="value" id="stat-votes">&ndash;</div><div class="label">Votes in view</div></div>
+    <div class="stat-tile"><div class="value" id="stat-companies">&ndash;</div><div class="label">Companies in view</div></div>
+    <div class="stat-tile"><div class="value" id="stat-for">&ndash;</div><div class="label">Voted FOR</div></div>
+    <div class="stat-tile"><div class="value" id="stat-against">&ndash;</div><div class="label">Voted against management</div></div>
+  </div>
+
+  <div class="switch-row">
+    <div class="switch-group" id="measure-switch">
+      <button data-measure="for" class="active">% voted FOR</button>
+      <button data-measure="with">% with management</button>
+      <button data-measure="against">% against management</button>
+      <button data-measure="count">Vote count</button>
+    </div>
+    <div class="switch-group" id="breakdown-switch">
+      <button data-breakdown="group" class="active">By group</button>
+      <button data-breakdown="family">By family</button>
+      <button data-breakdown="fund">By fund</button>
+      <button data-breakdown="label">By label</button>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-card-head"><h3>By meeting quarter</h3><button class="btn btn-sm" data-download="chart-trend">Download PNG</button></div>
+      <div class="chart-holder"><canvas id="chart-trend"></canvas></div>
+    </div>
+    <hr class="rule">
+    <div class="chart-card">
+      <div class="chart-card-head"><h3 id="groups-title">All quarters in view</h3><button class="btn btn-sm" data-download="chart-groups">Download PNG</button></div>
+      <div class="chart-holder" id="groups-holder"><canvas id="chart-groups"></canvas></div>
+    </div>
+    <hr class="rule">
+    <div class="chart-card">
+      <div class="chart-card-head"><h3>By topic <span class="card-sub">topics with 20+ votes in view</span></h3><button class="btn btn-sm" data-download="chart-topics">Download PNG</button></div>
+      <div class="chart-holder" style="height:420px;"><canvas id="chart-topics"></canvas></div>
+    </div>
+    <hr class="rule">
+    <div class="chart-card">
+      <div class="chart-card-head"><h3>Companies with the most votes against management</h3><button class="btn btn-sm" data-download="chart-companies">Download PNG</button></div>
+      <div class="chart-holder" style="height:420px;"><canvas id="chart-companies"></canvas></div>
+    </div>
+  </div>
+
+  <hr class="rule">
+  <p class="result-count" id="result-count"></p>
+  <div class="table-wrap">
+    <table class="data-table" id="data-table">
+      <thead>
+        <tr>
+          <th>Meeting</th><th>Company</th><th>Fund</th><th>Proposal</th><th>Type</th><th>Vote</th><th>Vs. mgmt</th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+        <tr><td colspan="7" class="loading-note">Loading 301,734 votes&hellip;</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    Data: SEC EDGAR, Form N-PX. Built by Shelby L. Riggs with Claude Code.
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="js/charts-common.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/effects.js"></script>
+</body>
+</html>

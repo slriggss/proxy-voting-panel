@@ -774,3 +774,9 @@ section.finding:has(.tag-bigthree) { --pillar: var(--series-1); }
 section.finding:has(.tag-active)   { --pillar: var(--series-2); }
 section.finding:has(.tag-esgfam)   { --pillar: var(--series-3); }
 section.finding:has(.tag-ballot)   { --pillar: var(--series-7); }
+
+/* Dashboard vote table */
+.data-table td.proposal-cell { min-width: 260px; max-width: 420px; font-variant-numeric: normal; }
+.data-table td.vote-against { color: var(--series-8); font-weight: 600; }
+.data-table td:nth-child(1), .data-table td:nth-child(5), .data-table td:nth-child(6), .data-table td:nth-child(7), .data-table th { white-space: nowrap; }
+.chart-card-head .card-sub { font-family: var(--font-body); font-weight: 400; font-size: 12.5px; color: var(--text-muted); margin-left: 6px; }
