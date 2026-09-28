@@ -3,3 +3,6 @@ data/raw/
 node_modules/
 .DS_Store
 Thumbs.db
+
+# Uncompressed output is >100 MB (GitHub limit); the repo keeps data/votes.csv.gz
+data/votes.csv
