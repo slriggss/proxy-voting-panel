@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compare funds &mdash; Proxy Voting Panel</title>
+<meta name="description" content="Pick any two of 22 funds and see how often they cast different votes on the same proposals at the same meetings.">
+<link rel="canonical" href="https://slriggss.github.io/proxy-voting-panel/compare.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Proxy Voting Panel">
+<meta property="og:title" content="Compare funds &mdash; Proxy Voting Panel">
+<meta property="og:description" content="Head-to-head: how often do two funds vote differently on the same proposals? Pick any pair from 22 funds.">
+<meta property="og:url" content="https://slriggss.github.io/proxy-voting-panel/compare.html">
+<meta property="og:image" content="https://slriggss.github.io/proxy-voting-panel/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600;700&family=Fira+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('esg-theme');
+      // Dark is the default look; a saved choice from the toggle wins.
+      document.documentElement.setAttribute('data-theme', t || 'dark');
+    } catch (e) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+</script>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">Proxy Voting Panel</a>
+    <div class="links">
+      <a href="index.html">Report</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="compare.html" class="active">Compare</a>
+      <button class="btn" id="theme-toggle" type="button" style="margin-left:20px;" aria-label="Switch color theme"></button>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="wrap">
+    <h1>Compare two funds</h1>
+    <p class="byline">Pick two funds. The page finds the proposals both voted on at the same company meeting and shows where they went different ways.</p>
+  </div>
+</header>
+
+<noscript>
+  <div class="wrap"><p class="noscript-note">This page needs JavaScript to load and compare the votes, and it is turned off in your browser. The <a href="index.html">report</a> reads without it.</p></div>
+</noscript>
+<div class="wrap"><p class="load-error" id="load-error" role="alert" hidden></p></div>
+
+<main class="wrap">
+
+  <div class="dashboard-toolbar">
+    <div class="pick-grid">
+      <div class="filter-block">
+        <div class="pick-label a" id="pick-a-label">Fund A</div>
+        <div class="chip-row pick a" id="pick-a" role="radiogroup" aria-labelledby="pick-a-label"></div>
+      </div>
+      <div class="filter-block">
+        <div class="pick-label b" id="pick-b-label">Fund B</div>
+        <div class="chip-row pick b" id="pick-b" role="radiogroup" aria-labelledby="pick-b-label"></div>
+      </div>
+    </div>
+    <div class="filter-block">
+      <div class="filter-label" id="type-label">Compare on <small>which proposals to include</small></div>
+      <div class="chip-row" id="type-chips" role="radiogroup" aria-labelledby="type-label"></div>
+    </div>
+    <div class="toolbar-actions">
+      <button class="btn" id="btn-share">Copy shareable link</button>
+      <button class="btn" id="btn-export-csv" style="margin-left:8px;">Download the matched votes (CSV)</button>
+    </div>
+  </div>
+
+  <p class="compare-summary" id="summary">Loading votes&hellip;</p>
+
+  <div class="stat-grid" id="summary-tiles">
+    <div class="stat-tile"><div class="value" id="stat-pairs">&ndash;</div><div class="label">Proposals both funds voted</div></div>
+    <div class="stat-tile"><div class="value" id="stat-differ">&ndash;</div><div class="label">Cast different votes</div></div>
+    <div class="stat-tile"><div class="value" id="stat-a">&ndash;</div><div class="label" id="stat-a-label">Fund A voted FOR</div></div>
+    <div class="stat-tile"><div class="value" id="stat-b">&ndash;</div><div class="label" id="stat-b-label">Fund B voted FOR</div></div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-card-head"><h3>Share of votes FOR, by proposal type <span class="card-sub">on the proposals both funds voted</span></h3><button class="btn btn-sm" data-download="chart-types">Download PNG</button></div>
+      <div class="chart-holder" style="height:340px;"><canvas id="chart-types"></canvas></div>
+    </div>
+  </div>
+
+  <hr class="rule">
+  <p class="result-count" id="result-count"></p>
+  <div class="table-wrap">
+    <table class="data-table" id="data-table">
+      <thead>
+        <tr><th>Meeting</th><th>Company</th><th>Proposal</th><th>Type</th><th id="th-a">Fund A</th><th id="th-b">Fund B</th></tr>
+      </thead>
+      <tbody id="table-body">
+        <tr><td colspan="6" class="loading-note">Loading votes&hellip;</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="table-foot" id="coverage-note"></p>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    Data: SEC EDGAR, Form N-PX. Built by Shelby L. Riggs with Claude Code.
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" integrity="sha384-NrKB+u6Ts6AtkIhwPixiKTzgSKNblyhlk0Sohlgar9UHUBzai/sgnNNWWd291xqt" crossorigin="anonymous"></script>
+<script src="js/charts-common.js"></script>
+<script src="js/compare.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/effects.js"></script>
+</body>
+</html>

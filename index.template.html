@@ -1,18 +1,16 @@
 <!doctype html>
-<!-- GENERATED FILE: edit index.template.html and run `node scripts/build_report.js`. -->
-
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Proxy Voting Panel &mdash; How Fund Managers Vote</title>
-<meta name="description" content="How the Big Three, two other large managers, and ESG-branded fund families voted 301,734 proxy ballots, from SEC Form N-PX filings.">
+<meta name="description" content="How the Big Three, two other large managers, and ESG-branded fund families voted {{head.votes}} proxy ballots, from SEC Form N-PX filings.">
 <link rel="canonical" href="https://slriggss.github.io/proxy-voting-panel/">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Proxy Voting Panel">
 <meta property="og:title" content="Proxy Voting Panel &mdash; How Fund Managers Vote">
-<meta property="og:description" content="22 funds, 301,734 proxy votes from SEC Form N-PX: nine findings, a filterable dashboard, and a head-to-head fund comparison.">
+<meta property="og:description" content="{{head.funds}} funds, {{head.votes}} proxy votes from SEC Form N-PX: nine findings, a filterable dashboard, and a head-to-head fund comparison.">
 <meta property="og:url" content="https://slriggss.github.io/proxy-voting-panel/">
 <meta property="og:image" content="https://slriggss.github.io/proxy-voting-panel/assets/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -54,7 +52,7 @@
     <p class="byline">Shelby L. Riggs &middot; Stewardship analysis &middot; SEC Form N-PX, 2023&ndash;2026</p>
     <p class="summary">
       Every U.S. mutual fund and ETF must tell the SEC how it voted at every company meeting. This report reads
-      three years of those filings for 22 large-cap stock funds &mdash; the flagship and ESG-labeled funds of
+      three years of those filings for {{head.funds}} large-cap stock funds &mdash; the flagship and ESG-labeled funds of
       Vanguard, BlackRock, and State Street, two other large managers (Fidelity and Capital Group), and six
       ESG-dedicated fund families &mdash; to ask where stewardship actually happens. The short answer: inside a big
       family, an ESG fund votes almost exactly like that family's flagship; the real divide is between managers;
@@ -62,10 +60,10 @@
       data can't fully separate weaker investor support from a changing ballot.
     </p>
     <div class="stat-grid">
-      <div class="stat-tile"><div class="value" id="stat-votes">301,734</div><div class="label">Fund votes analyzed</div></div>
-      <div class="stat-tile"><div class="value" id="stat-funds">22</div><div class="label">Funds across 10 families</div></div>
-      <div class="stat-tile"><div class="value" id="stat-companies">2,015</div><div class="label">Companies voted on</div></div>
-      <div class="stat-tile"><div class="value" id="stat-quarters">12</div><div class="label">Quarters of meetings</div></div>
+      <div class="stat-tile"><div class="value" id="stat-votes">{{head.votes}}</div><div class="label">Fund votes analyzed</div></div>
+      <div class="stat-tile"><div class="value" id="stat-funds">{{head.funds}}</div><div class="label">Funds across {{head.families}} families</div></div>
+      <div class="stat-tile"><div class="value" id="stat-companies">{{head.companies}}</div><div class="label">Companies voted on</div></div>
+      <div class="stat-tile"><div class="value" id="stat-quarters">{{head.quarters}}</div><div class="label">Quarters of meetings</div></div>
     </div>
     <nav class="section-nav" aria-label="Report sections">
       <div class="nav-group cmp">
@@ -109,7 +107,7 @@
       <li><strong>Small samples.</strong> Some rates rest on few votes. Charts show the number of votes and a 95% interval in their tooltips, and the text says so where a figure is thin.</li>
       <li><strong>Proposal direction is judged by keyword rules.</strong> Whether a shareholder proposal is &ldquo;pro-ESG&rdquo; or &ldquo;anti-ESG&rdquo; comes from ordered keyword rules, not from a person reading each one. Every label is listed for review.</li>
       <li><strong>Association, not motive.</strong> The filings show how funds voted, not why. Nothing here explains a fund's policy.</li>
-      <li><strong>22 funds, U.S. large-cap.</strong> This is a deliberately chosen panel, not every fund or every manager.</li>
+      <li><strong>{{head.funds}} funds, U.S. large-cap.</strong> This is a deliberately chosen panel, not every fund or every manager.</li>
     </ul>
   </aside>
 
@@ -119,15 +117,15 @@
     <p>
       Each of the Big Three, and Fidelity, sells ESG-labeled versions of its U.S. index funds. On the same
       shareholder proposal at the same meeting, those ESG funds cast a different vote from their family's flagship
-      almost never: 0.1% of the time for iShares ESG Aware (860 proposals compared), 0.2% for SPDR S&amp;P 500 ESG,
-      0.4% for Vanguard ESG U.S. Stock, and 0.0% for Fidelity's U.S. Sustainability Index. The two exceptions are
-      small: iShares Paris-Aligned Climate differs on 3.0% of shareholder proposals, and Fidelity's actively
-      managed Sustainable U.S. Equity Fund on 5.6% compared with Contrafund.
+      almost never: {{sib.ishaware}}% of the time for iShares ESG Aware ({{sib.ishaware.n}} proposals compared), {{sib.spdresg}}% for SPDR S&amp;P 500 ESG,
+      {{sib.vanesg}}% for Vanguard ESG U.S. Stock, and {{sib.fidsust}}% for Fidelity's U.S. Sustainability Index. The two exceptions are
+      small: iShares Paris-Aligned Climate differs on {{sib.ishparis}}% of shareholder proposals, and Fidelity's actively
+      managed Sustainable U.S. Equity Fund on {{sib.fidsusteq}}% compared with Contrafund.
     </p>
     <p>
       For scale, the Vanguard 500 Index Fund and the Calvert U.S. Large-Cap Core Responsible Index Fund &mdash; an
-      ESG index fund from a different manager &mdash; disagree on 64.3% of the 995 shareholder proposals they both
-      voted (95% interval 61.3&ndash;67.2%). The label changes which companies a fund holds; the family's stewardship team decides how it votes.
+      ESG index fund from a different manager &mdash; disagree on {{ref}}% of the {{ref.n}} shareholder proposals they both
+      voted (95% interval {{ref.lo}}&ndash;{{ref.hi}}%). The label changes which companies a fund holds; the family's stewardship team decides how it votes.
       That is what a single, centralized voting policy predicts, so the finding is about <em>where</em> the vote is decided, not about
       whether ESG funds &ldquo;should&rdquo; vote differently. Across families, filers word the same proposal differently, so
       cross-family comparisons like the Calvert one match fewer proposals than same-family ones do.
@@ -141,21 +139,21 @@
     <h2>The real divide is between managers: from 0% to 80% support for pro-ESG proposals</h2>
     <p>
       Counting only shareholder proposals that ask companies for more climate, social, or human-rights action or
-      disclosure (&ldquo;pro-ESG&rdquo;), Vanguard's three funds supported none of them: 0 of 581 for the Vanguard
+      disclosure (&ldquo;pro-ESG&rdquo;), Vanguard's three funds supported none of them: {{p.van500.k}} of {{p.van500.n}} for the Vanguard
       500 Index Fund. BlackRock's S&amp;P 500, ESG Aware, and ESG Screened ETFs supported about 2% (its Paris-Aligned
-      Climate ETF 9.2%), State Street's SPDR funds 9&ndash;11%, and Fidelity's index funds under 3%. At the other end, Calvert's index fund supported 80.6%, Domini 80.0%, and
-      Green Century 79.5%.
+      Climate ETF {{p.ishparis}}%), State Street's SPDR funds 9&ndash;11%, and Fidelity's index funds under 3%. At the other end, Calvert's index fund supported {{p.calidx}}%, Domini {{p.dom}}%, and
+      Green Century {{p.gc}}%.
     </p>
     <p>
       Actively managed mainstream funds sit in between but closer to the index giants: Fidelity Contrafund at
-      14.4%, The Growth Fund of America at 4.3%. Fidelity's Sustainable U.S. Equity Fund, at 27.5%, is the ESG
+      {{p.fidcontra}}%, The Growth Fund of America at {{p.gfa}}%. Fidelity's Sustainable U.S. Equity Fund, at {{p.fidsusteq}}%, is the ESG
       fund inside a mainstream family that votes most differently from its sibling.
     </p>
     <p>
       Funds hold different companies, so a fund could look different just because it faced different proposals. As a check, restricting
-      every fund to meetings at S&amp;P 500 companies (1,528 meetings where at least three of the four S&amp;P 500 flagships voted) moves no fund's
-      rate by more than 1.9 points (Calvert's index fund goes from 80.6% to 78.8%), so the ranking is not an artifact of who holds what.
-      Two funds rest on few votes: Calvert Equity (61 pro-ESG votes, interval 49.7&ndash;73.4%) and Parnassus (101 votes, interval 58.7&ndash;76.6%).
+      every fund to meetings at S&amp;P 500 companies ({{head.spm}} meetings where at least three of the four S&amp;P 500 flagships voted) moves no fund's
+      rate by more than {{robust.max}} points (Calvert's index fund goes from {{p.calidx}}% to {{p.calidx.m}}%), so the ranking is not an artifact of who holds what.
+      Two funds rest on few votes: Calvert Equity ({{p.caleq.n}} pro-ESG votes, interval {{p.caleq.lo}}&ndash;{{p.caleq.hi}}%) and Parnassus ({{p.parn.n}} votes, interval {{p.parn.lo}}&ndash;{{p.parn.hi}}%).
     </p>
     <div class="chart-card"><div class="chart-holder" style="height:640px;"><canvas id="chart-divide"></canvas></div></div>
     <p class="figure-note">Share of votes cast FOR on pro-ESG shareholder proposals, all three reporting years pooled. Colors: Big Three, other large managers (Fidelity, Capital Group), ESG families. Tooltips give the number of votes, the 95% interval, and the rate at S&amp;P 500 meetings only. Proposal direction is assigned by the rules in <code>scripts/stance_rules.js</code> (see methodology).</p>
@@ -166,8 +164,8 @@
     <h2>Big Three support for pro-ESG proposals, already low, kept falling</h2>
     <p>
       Among the four S&amp;P 500 index flagships, only State Street's gave pro-ESG proposals meaningful support,
-      and it fell from 12.6% in the 2023&ndash;24 proxy year to 8.2% and then 8.7%. iShares went from 2.8% to 1.1%
-      to 0.9%, Fidelity's 500 Index Fund from 4.7% to zero, and Vanguard stayed at zero all three years. Each fund-year rests on 104 to 286 votes.
+      and it fell from {{p.spdrport.s0}}% in the 2023&ndash;24 proxy year to {{p.spdrport.s1}}% and then {{p.spdrport.s2}}%. iShares went from {{p.ishcore.s0}}% to {{p.ishcore.s1}}%
+      to {{p.ishcore.s2}}%, Fidelity's 500 Index Fund from {{p.fid500.s0}}% to zero, and Vanguard stayed at zero all three years. Each fund-year rests on {{bt.nmin}} to {{bt.nmax}} votes.
     </p>
     <div class="chart-card"><div class="chart-holder"><canvas id="chart-bigthree"></canvas></div></div>
     <p class="figure-note">Share of votes cast FOR on pro-ESG shareholder proposals, by reporting year (July 1&ndash;June 30). Hover a point for votes and the 95% interval.</p>
@@ -178,13 +176,13 @@
     <h2>Fewer environmental and social proposals reached a vote, and more of them were anti-ESG</h2>
     <p>
       The four S&amp;P 500 index flagships hold nearly the same companies, so the proposals they vote on track the
-      ballot itself. Each voted on about 539 shareholder proposals in the 2023&ndash;24 proxy year, 388 in 2024&ndash;25,
-      and 332 in 2025&ndash;26. Pro-ESG proposals fell faster, from about 280 to 113 &mdash; a 60% drop.
+      ballot itself. Each voted on about {{bal.0.total}} shareholder proposals in the 2023&ndash;24 proxy year, {{bal.1.total}} in 2024&ndash;25,
+      and {{bal.2.total}} in 2025&ndash;26. Pro-ESG proposals fell faster, from about {{bal.0.pro}} to {{bal.2.pro}} &mdash; a {{bal.drop}}% drop.
     </p>
     <p>
       Proposals pushing the other way &mdash; asking companies to report the risks of their DEI programs or climate
-      commitments, or to review &ldquo;politicized&rdquo; banking &mdash; fell much less (from about 36 to 27), so their share
-      of environmental and social proposals rose from 10.6% to 18.1%.
+      commitments, or to review &ldquo;politicized&rdquo; banking &mdash; fell much less (from about {{bal.0.anti}} to {{bal.2.anti}}), so their share
+      of environmental and social proposals rose from {{bal.0.share}}% to {{bal.2.share}}%.
     </p>
     <p>
       Part of this is likely supply rather than investor demand, and this panel can't separate the two: it sees only proposals that reached a vote.
@@ -202,8 +200,8 @@
     <span class="tag tag-ballot">The ballot</span>
     <h2>Almost no fund votes for anti-ESG proposals &mdash; including the ones that vote against ESG proposals</h2>
     <p>
-      Anti-ESG proposals received 0.0% support from the Big Three funds (712 votes) and 0.0% from the Fidelity and Capital Group funds
-      (345 votes); with samples that size, the true rate is very likely under about 1%. The ESG families gave them 3.4% (262 votes, interval 1.8&ndash;6.4%). So the Big Three's low support for pro-ESG proposals
+      Anti-ESG proposals received {{anti.big3}}% support from the Big Three funds ({{anti.big3.n}} votes) and {{anti.other}}% from the Fidelity and Capital Group funds
+      ({{anti.other.n}} votes); with samples that size, the true rate is very likely under about 1%. The ESG families gave them {{anti.esgf}}% ({{anti.esgf.n}} votes, interval {{anti.esgf.lo}}&ndash;{{anti.esgf.hi}}%). So the Big Three's low support for pro-ESG proposals
       is not a mirror image: they vote against shareholder proposals on environmental and social topics from
       both directions.
     </p>
@@ -215,21 +213,21 @@
     <span class="tag tag-esgfam">ESG families</span>
     <h2>ESG specialists supported fewer pro-ESG proposals in 2025&ndash;26, mostly on climate and human rights</h2>
     <p>
-      Calvert's index fund supported 86.2% of pro-ESG proposals in 2023&ndash;24 and 67.0% in 2025&ndash;26. Domini went
-      from 82.0% to 67.8% and Green Century from 81.5% to 71.8%. Parnassus moved the other way, to 78.3%, but on only 23 votes
-      (interval 58.1&ndash;90.3%), and Calvert Equity's 50.0% rests on 14 &mdash; too few to read. Hollow points on the chart mark fund-years with fewer than 30 votes.
+      Calvert's index fund supported {{sp.calidx.0}}% of pro-ESG proposals in 2023&ndash;24 and {{sp.calidx.2}}% in 2025&ndash;26. Domini went
+      from {{sp.dom.0}}% to {{sp.dom.2}}% and Green Century from {{sp.gc.0}}% to {{sp.gc.2}}%. Parnassus moved the other way, to {{sp.parn.2}}%, but on only {{sp.parn.2.n}} votes
+      (interval {{sp.parn.2.lo}}&ndash;{{sp.parn.2.hi}}%), and Calvert Equity's {{sp.caleq.2}}% rests on {{sp.caleq.2.n}} &mdash; too few to read. Hollow points on the chart mark fund-years with fewer than 30 votes.
     </p>
     <p>
       Is that just a changing ballot? Anti-ESG proposals are counted separately, but the pro-ESG proposals themselves may also have changed. Holding the topic
-      fixed, the ESG families' support fell in 2025&ndash;26 for climate proposals (77.7% to 61.2%, 121 votes) and for human-rights and workforce
-      proposals (92.9% to 80.5%, 41 votes), but not for other social proposals (75.4% to 78.8%); the diversity figure (81.8% to 57.1%)
-      rests on 14 votes. Restricting to S&amp;P 500 meetings gives the same overall path (79.9%, 78.9%, 66.8%). So the decline is not just a topic-mix
+      fixed, the ESG families' support fell in 2025&ndash;26 for climate proposals ({{ts.env.1}}% to {{ts.env.2}}%, {{ts.env.2.n}} votes) and for human-rights and workforce
+      proposals ({{ts.hr.1}}% to {{ts.hr.2}}%, {{ts.hr.2.n}} votes), but not for other social proposals ({{ts.oth.1}}% to {{ts.oth.2}}%); the diversity figure ({{ts.dei.1}}% to {{ts.dei.2}}%)
+      rests on {{ts.dei.2.n}} votes. Restricting to S&amp;P 500 meetings gives the same overall path ({{ts.sp.0}}%, {{ts.sp.1}}%, {{ts.sp.2}}%). So the decline is not just a topic-mix
       effect, but the panel can't rule out that the proposals still reaching a vote differ in quality or wording from earlier years.
     </p>
     <p>
       Impax's 2025&ndash;26 filing is not shown: its vote column appears to hold management's recommendations rather
       than the fund's votes (see &ldquo;About the data&rdquo;). In the two years it reported cleanly, Impax supported
-      74&ndash;76% of pro-ESG proposals.
+      {{sp.impax.lo}}&ndash;{{sp.impax.hi}}% of pro-ESG proposals.
     </p>
     <div class="chart-card"><div class="chart-holder"><canvas id="chart-specialists"></canvas></div></div>
     <p class="figure-note">Share of votes cast FOR on pro-ESG shareholder proposals, by reporting year. Hollow points: fewer than 30 votes.</p>
@@ -239,14 +237,14 @@
     <span class="tag tag-active">Pay &amp; boards</span>
     <h2>Pushback on pay and boards comes from a few ESG families and Capital Group's Growth Fund, not the index giants</h2>
     <p>
-      On say-on-pay votes, Domini voted against 87.8% of the time, Calvert's index fund 65.0%, and Green Century
-      64.8%. On director elections, Domini voted against or withheld on 58.1% of nominees and Green
-      Century 52.4%. The ESG families are not uniform, though: Parnassus opposed 12.3% of pay packages and 10.0% of nominees, and Impax 18.5% and 5.8%.
+      On say-on-pay votes, Domini voted against {{pay.dom}}% of the time, Calvert's index fund {{pay.calidx}}%, and Green Century
+      {{pay.gc}}%. On director elections, Domini voted against or withheld on {{dir.dom}}% of nominees and Green
+      Century {{dir.gc}}%. The ESG families are not uniform, though: Parnassus opposed {{pay.parn}}% of pay packages and {{dir.parn}}% of nominees, and Impax {{pay.impax}}% and {{dir.impax}}%.
     </p>
     <p>
-      Among mainstream funds, The Growth Fund of America opposed 18.4% of pay packages (12.4% at S&amp;P 500 meetings) but only 1.2% of director nominees;
-      Fidelity's funds and Washington Mutual look much like the Big Three, where every fund opposed 4.3% or fewer pay packages and 4.9% or fewer director nominees.
-      Restricting to S&amp;P 500 meetings changes several of these figures by several points (Green Century's say-on-pay opposition goes from 64.8% to 58.4%), so treat the
+      Among mainstream funds, The Growth Fund of America opposed {{pay.gfa}}% of pay packages ({{pay.gfa.m}}% at S&amp;P 500 meetings) but only {{dir.gfa}}% of director nominees;
+      Fidelity's funds and Washington Mutual look much like the Big Three, where every fund opposed {{pay.big3max}}% or fewer pay packages and {{dir.big3max}}% or fewer director nominees.
+      Restricting to S&amp;P 500 meetings changes several of these figures by several points (Green Century's say-on-pay opposition goes from {{pay.gc}}% to {{pay.gc.m}}%), so treat the
       exact percentages as approximate; the tooltips show both.
     </p>
     <div class="chart-card"><div class="chart-holder" style="height:640px;"><canvas id="chart-pay"></canvas></div></div>
@@ -257,11 +255,11 @@
     <span class="tag tag-active">Governance</span>
     <h2>The Big Three do back shareholder proposals &mdash; on governance, not environmental or social issues</h2>
     <p>
-      Big Three funds supported 37.0% of shareholder proposals on shareholder rights and defenses (proxy access,
-      special meetings, declassified boards), about 10 times their 3.8% support for pro-ESG proposals. Fidelity and Capital Group show the same pattern, and
-      it helps to keep index and active funds apart: Fidelity's two index funds backed 78.6% of shareholder-rights proposals (56 votes) and 1.8% of pro-ESG ones;
-      the four active funds backed 61.5% (65 votes) and 9.8%. Those shareholder-rights figures are small samples. Only the ESG families
-      support both kinds at similar rates (90.7% and 78.0%).
+      Big Three funds supported {{gv.big3.rights}}% of shareholder proposals on shareholder rights and defenses (proxy access,
+      special meetings, declassified boards), about {{gv.big3.ratio}} times their {{gv.big3.pro}}% support for pro-ESG proposals. Fidelity and Capital Group show the same pattern, and
+      it helps to keep index and active funds apart: Fidelity's two index funds backed {{gv.idx.rights}}% of shareholder-rights proposals ({{gv.idx.rights.n}} votes) and {{gv.idx.pro}}% of pro-ESG ones;
+      the four active funds backed {{gv.act.rights}}% ({{gv.act.rights.n}} votes) and {{gv.act.pro}}%. Those shareholder-rights figures are small samples. Only the ESG families
+      support both kinds at similar rates ({{gv.esgf.rights}}% and {{gv.esgf.pro}}%).
     </p>
     <div class="chart-card"><div class="chart-holder"><canvas id="chart-governance"></canvas></div></div>
     <p class="figure-note">Share of votes cast FOR on shareholder proposals, by fund group: pro-ESG proposals, all governance proposals, and the SEC's &ldquo;shareholder rights and defenses&rdquo; category. &ldquo;Other large managers&rdquo; is Fidelity (two index and two active funds) and Capital Group (two active funds).</p>
@@ -271,13 +269,13 @@
     <span class="tag tag-active">Capital Group</span>
     <h2>Capital Group's funds sharply increased their support for governance proposals in 2025&ndash;26</h2>
     <p>
-      The Growth Fund of America supported 43.2% of governance shareholder proposals in 2023&ndash;24, 45.2% in
-      2024&ndash;25, and 62.1% in 2025&ndash;26. Washington Mutual Investors Fund rose from 31.4% to 50.6%. Their support for
-      pro-ESG proposals stayed between 1% and 5% throughout, so the shift is about governance, not ESG.
+      The Growth Fund of America supported {{cap.gfa.0}}% of governance shareholder proposals in 2023&ndash;24, {{cap.gfa.1}}% in
+      2024&ndash;25, and {{cap.gfa.2}}% in 2025&ndash;26. Washington Mutual Investors Fund rose from {{cap.wami.0}}% to {{cap.wami.2}}%. Their support for
+      pro-ESG proposals stayed between {{cap.pro.min}}% and {{cap.pro.max}}% throughout, so the shift is about governance, not ESG.
     </p>
     <p>
       &ldquo;Governance&rdquo; here includes proposals no keyword rule recognized, which are counted as governance and other. Using only proposals a rule positively identified as
-      governance, the pattern holds: the Growth Fund goes 39.7%, 46.0%, 62.5%, and Washington Mutual 29.5%, 44.4%, 56.1%.
+      governance, the pattern holds: the Growth Fund goes {{cap.gfa.0.r}}%, {{cap.gfa.1.r}}%, {{cap.gfa.2.r}}%, and Washington Mutual {{cap.wami.0.r}}%, {{cap.wami.1.r}}%, {{cap.wami.2.r}}%.
     </p>
     <div class="chart-card"><div class="chart-holder"><canvas id="chart-capital"></canvas></div></div>
     <p class="figure-note">Share of votes cast FOR on governance shareholder proposals, by reporting year. Tooltips show votes, the 95% interval, and the rule-identified-only figure.</p>
@@ -293,8 +291,8 @@
       ending June 2024, 2025, and 2026.
     </p>
     <p>
-      <strong>What one row is.</strong> One fund's vote on one proposal at one company meeting: 301,734 rows for
-      22 funds, 2,015 companies (share classes counted once), and 12 calendar quarters of meetings (2023-Q3 to 2026-Q2). The funds are all U.S.
+      <strong>What one row is.</strong> One fund's vote on one proposal at one company meeting: {{head.votes}} rows for
+      {{head.funds}} funds, {{head.companies}} companies (share classes counted once), and {{head.quarters}} calendar quarters of meetings ({{head.firstQuarter}} to {{head.lastQuarter}}). The funds are all U.S.
       large-cap stock funds, chosen so they vote at largely the same companies.
     </p>
     <p>
@@ -321,8 +319,8 @@
       <strong>Proposal direction.</strong> The SEC categories say what a proposal is about but not which way it
       points. <code>scripts/stance_rules.js</code> labels each shareholder proposal pro-ESG, anti-ESG, unclear (topics
       both camps file, such as charitable giving), or governance, using ordered keyword rules; every label records
-      the rule that produced it, and <code>data/proposal_stance_review.csv</code> lists all 2,184 distinct proposal
-      texts for review. These labels come from keyword rules and have not yet been checked against a hand-labeled sample; <code>scripts/make_audit_sample.js</code> draws one for that purpose. Proposals no rule recognized (1,534 of 7,508 votes in the governance-and-other group, 20%)
+      the rule that produced it, and <code>data/proposal_stance_review.csv</code> lists all {{cls.texts}} distinct proposal
+      texts for review. {{audit.sentence}} Proposals no rule recognized ({{cls.norule}} of {{cls.gov}} votes in the governance-and-other group, {{cls.norule.pct}}%)
       are counted as governance; the Capital Group finding is shown both ways.
     </p>
     <p>

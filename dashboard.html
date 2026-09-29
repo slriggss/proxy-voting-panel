@@ -4,7 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dashboard &mdash; Proxy Voting Panel</title>
-<meta name="description" content="Filter 301,734 fund proxy votes by fund family, fund type, quarter, proposal type, topic, and company.">
+<meta name="description" content="Filter more than 300,000 fund proxy votes by fund family, fund type, meeting, proposal type, topic, company, or proposal text.">
+<link rel="canonical" href="https://slriggss.github.io/proxy-voting-panel/dashboard.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Proxy Voting Panel">
+<meta property="og:title" content="Dashboard &mdash; Proxy Voting Panel">
+<meta property="og:description" content="Filter fund proxy votes from SEC Form N-PX by manager, proposal type, topic, and company; charts and table update live.">
+<meta property="og:url" content="https://slriggss.github.io/proxy-voting-panel/dashboard.html">
+<meta property="og:image" content="https://slriggss.github.io/proxy-voting-panel/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600;700&family=Fira+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap">
@@ -29,7 +40,8 @@
     <div class="links">
       <a href="index.html">Report</a>
       <a href="dashboard.html" class="active">Dashboard</a>
-      <button class="btn" id="theme-toggle" style="margin-left:20px;">&#127769; Dark</button>
+      <a href="compare.html">Compare</a>
+      <button class="btn" id="theme-toggle" type="button" style="margin-left:20px;" aria-label="Switch color theme"></button>
     </div>
   </div>
 </nav>
@@ -37,12 +49,22 @@
 <header class="page-header">
   <div class="wrap">
     <h1>Explore the votes</h1>
-    <p class="byline">Filter 301,734 fund votes and everything below &mdash; the summary numbers, the four charts,
-      and the table &mdash; recomputes in your browser.</p>
+    <p class="byline">Start from a question below, or filter every fund vote yourself &mdash; the summary numbers, the four charts,
+      and the table recompute in your browser.</p>
   </div>
 </header>
 
+<noscript>
+  <div class="wrap"><p class="noscript-note">The dashboard needs JavaScript to load and filter the votes, and it is turned off in your browser. The full data set is in the repository (<code>data/votes.csv.gz</code>), and the <a href="index.html">report</a> reads without it.</p></div>
+</noscript>
+<div class="wrap"><p class="load-error" id="load-error" role="alert" hidden></p></div>
+
 <main class="wrap">
+
+  <div class="presets">
+    <div class="filter-label" id="preset-label">Start from a question</div>
+    <div class="chip-row" id="preset-chips" role="group" aria-labelledby="preset-label"></div>
+  </div>
 
   <div class="dashboard-toolbar">
     <div class="filter-block">
@@ -79,12 +101,16 @@
       </div>
     </div>
     <div class="filter-block">
-      <div class="filter-label" id="type-label">Proposal type <small>who proposed it, and which way a shareholder proposal points</small></div>
+      <div class="filter-label" id="type-label">Proposal type <small>who proposed it, and which way a shareholder proposal points (<a href="data/proposal_stance_review.csv">how proposals are labeled</a>)</small></div>
       <div class="chip-row" id="type-chips" role="group" aria-labelledby="type-label"></div>
     </div>
     <div class="filter-block">
       <div class="filter-label" id="topic-label">Topic <small>SEC vote category</small></div>
       <div class="chip-row" id="topic-chips" role="group" aria-labelledby="topic-label"></div>
+    </div>
+    <div class="filter-block">
+      <label class="filter-label" for="f-text">Search proposal text <small>e.g. climate, special meeting, lobbying</small></label>
+      <input id="f-text" class="text-search" type="search" autocomplete="off" placeholder="Words in the proposal wording&hellip;">
     </div>
     <div class="toolbar-actions">
       <button class="btn" id="btn-share">Copy shareable link</button>
@@ -101,23 +127,28 @@
   </div>
 
   <div class="switch-row">
-    <div class="switch-group" id="measure-switch">
+    <div class="switch-group" id="measure-switch" role="group" aria-label="Measure">
       <button data-measure="for" class="active">% voted FOR</button>
       <button data-measure="with">% with management</button>
       <button data-measure="against">% against management</button>
       <button data-measure="count">Vote count</button>
     </div>
-    <div class="switch-group" id="breakdown-switch">
+    <div class="switch-group" id="breakdown-switch" role="group" aria-label="Breakdown">
       <button data-breakdown="group" class="active">By group</button>
       <button data-breakdown="family">By family</button>
       <button data-breakdown="fund">By fund</button>
       <button data-breakdown="label">By label</button>
     </div>
+    <div class="switch-group" id="time-switch" role="group" aria-label="Time unit">
+      <button data-time="season" class="active">By proxy season</button>
+      <button data-time="quarter">By meeting quarter</button>
+    </div>
   </div>
 
   <div class="charts-grid">
     <div class="chart-card">
-      <div class="chart-card-head"><h3>By meeting quarter</h3><button class="btn btn-sm" data-download="chart-trend">Download PNG</button></div>
+      <div class="chart-card-head"><h3 id="trend-title">By proxy season</h3><button class="btn btn-sm" data-download="chart-trend">Download PNG</button></div>
+      <p class="chart-note" id="trend-note"></p>
       <div class="chart-holder"><canvas id="chart-trend"></canvas></div>
     </div>
     <hr class="rule">
@@ -143,14 +174,21 @@
     <table class="data-table" id="data-table">
       <thead>
         <tr>
-          <th>Meeting</th><th>Company</th><th>Fund</th><th>Proposal</th><th>Type</th><th>Vote</th><th>Vs. mgmt</th>
+          <th class="sortable" data-sort="date" tabindex="0">Meeting</th>
+          <th class="sortable" data-sort="company" tabindex="0">Company</th>
+          <th class="sortable" data-sort="fund" tabindex="0">Fund</th>
+          <th>Proposal</th>
+          <th class="sortable" data-sort="type" tabindex="0">Type</th>
+          <th class="sortable" data-sort="vote" tabindex="0">Vote</th>
+          <th>Vs. mgmt</th>
         </tr>
       </thead>
       <tbody id="table-body">
-        <tr><td colspan="7" class="loading-note">Loading 301,734 votes&hellip;</td></tr>
+        <tr><td colspan="7" class="loading-note">Loading votes&hellip;</td></tr>
       </tbody>
     </table>
   </div>
+  <p class="table-foot">&ldquo;Type&rdquo; shows which rule labeled a shareholder proposal. The rules are keyword-based (see the report's methodology for how they were checked); <a href="data/proposal_stance_review.csv">every label is listed here</a>.</p>
 
 </main>
 
@@ -160,7 +198,7 @@
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" integrity="sha384-NrKB+u6Ts6AtkIhwPixiKTzgSKNblyhlk0Sohlgar9UHUBzai/sgnNNWWd291xqt" crossorigin="anonymous"></script>
 <script src="js/charts-common.js"></script>
 <script src="js/dashboard.js"></script>
 <script src="js/theme.js"></script>

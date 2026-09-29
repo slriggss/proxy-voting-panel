@@ -50,17 +50,22 @@ function loadVotes() {
   const lines = text.split('\n').filter(Boolean);
   const header = parseLine(lines[0]);
   const stanceCache = new Map();
+  // data/votes.csv.gz was written before this group was renamed; the name below is the one the site uses.
+  const GROUP_RENAMES = { 'Active managers': 'Other large managers' };
   const accession = header.indexOf('accession');
   return lines.slice(1).filter(line => !EXCLUDED_FILINGS.has(parseLine(line)[accession])).map(line => {
     const cells = parseLine(line);
     const r = {};
     header.forEach((h, i) => { r[h] = cells[i]; });
+    r.group = GROUP_RENAMES[r.group] || r.group;
     r.cast = CAST.has(r.vote);
     if (r.proponent === 'Shareholder') {
-      if (!stanceCache.has(r.proposal)) stanceCache.set(r.proposal, stanceOf(r.proposal).stance);
-      r.stance = stanceCache.get(r.proposal);
+      if (!stanceCache.has(r.proposal)) stanceCache.set(r.proposal, stanceOf(r.proposal));
+      r.stance = stanceCache.get(r.proposal).stance;
+      r.rule = stanceCache.get(r.proposal).rule;
     } else {
       r.stance = 'management';
+      r.rule = '';
     }
     return r;
   });

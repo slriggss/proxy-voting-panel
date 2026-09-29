@@ -12,18 +12,39 @@ const STANCE_LABEL = {
   'unclear': 'Shareholder: unclear',
   'governance': 'Shareholder: governance & other',
 };
-const GROUPS = ['Big Three', 'Active managers', 'ESG families'];
+const GROUPS = ['Big Three', 'Other large managers', 'ESG families'];
 const MEASURES = {
   for: { label: '% voted FOR', pct: true },
   with: { label: '% with management', pct: true },
   against: { label: '% against management', pct: true },
   count: { label: 'Votes', pct: false },
 };
+const FAMILY_ORDER = ['Vanguard', 'BlackRock', 'State Street', 'Fidelity', 'Capital Group', 'Parnassus', 'Calvert', 'Domini', 'Impax', 'Green Century'];
+// One fixed color per family (index into the theme's 10 series colors), so a
+// fund or family keeps its color in every chart and breakdown.
+const FAMILY_COLOR = { 'Vanguard': 0, 'BlackRock': 1, 'Parnassus': 2, 'State Street': 3, 'Fidelity': 4, 'Calvert': 5, 'Capital Group': 6, 'Domini': 7, 'Impax': 8, 'Green Century': 9 };
+const DASHES = [[], [7, 4], [2, 3], [8, 3, 2, 3]]; // told apart within a family
+const MIN_POINT_N = 30;  // trend points built on fewer votes are hidden
+const MAX_LINES = 12;    // most lines drawn in the trend chart
 
-const state = {
-  families: [], labels: [], styles: [], types: [], topics: [], companies: [],
-  qFrom: 0, qTo: 0, measure: 'for', breakdown: 'group',
-};
+// Starting points: each sets a full filter state and is a shareable link.
+const PRESETS = [
+  { label: 'Pro-ESG support, by manager group', state: { types: ['pro-ESG'], measure: 'for', breakdown: 'group' } },
+  { label: 'Pro-ESG support, fund by fund', state: { types: ['pro-ESG'], measure: 'for', breakdown: 'fund' } },
+  { label: 'Do ESG-labeled funds vote differently?', state: { types: ['pro-ESG'], measure: 'for', breakdown: 'label' } },
+  { label: 'Anti-ESG proposals', state: { types: ['anti-ESG'], measure: 'for', breakdown: 'group' } },
+  { label: 'Governance proposals', state: { types: ['governance'], measure: 'for', breakdown: 'group' } },
+  { label: 'Say-on-pay pushback', state: { types: ['management'], topics: ['SECTION 14A SAY-ON-PAY VOTES'], measure: 'against', breakdown: 'fund' } },
+  { label: 'Director opposition', state: { types: ['management'], topics: ['DIRECTOR ELECTIONS'], measure: 'against', breakdown: 'fund' } },
+];
+
+let LAST_Q = 0;
+const defaults = () => ({
+  families: [], labels: [], styles: [], types: ['pro-ESG'], topics: [], companies: [], text: '',
+  qFrom: 0, qTo: LAST_Q, measure: 'for', breakdown: 'group', time: 'season',
+});
+let state = defaults();
+let sort = { col: 'date', dir: 'desc' };
 
 // ---------------------------------------------------------------------------
 // Measures. Each works from running tallies so any grouping is one pass.
@@ -42,18 +63,34 @@ function measureOf(t, m = state.measure) {
   if (m === 'with') return t.rec ? 100 * t.withM / t.rec : null;
   if (m === 'against') return t.rec ? 100 * (t.rec - t.withM) / t.rec : null;
 }
+// Votes behind a measure: what a point's reliability rests on.
+const basisOf = (t, m = state.measure) => (m === 'count' ? t.n : m === 'for' ? t.cast : t.rec);
 const round1 = x => (x == null ? null : Math.round(x * 10) / 10);
 const fmtMeasure = (x, m = state.measure) => (x == null ? '–' : MEASURES[m].pct ? `${round1(x).toFixed(1)}%` : Math.round(x).toLocaleString());
 
 // ---------------------------------------------------------------------------
 // Filtering.
 // ---------------------------------------------------------------------------
+let textMatchQuery = null, textMatchSet = null; // proposal ids whose wording contains the query
+function textMatches() {
+  const q = state.text.trim().toLowerCase();
+  if (!q) return null;
+  if (q !== textMatchQuery) {
+    textMatchQuery = q;
+    textMatchSet = new Set();
+    const words = q.split(/\s+/);
+    D.lists.proposal.forEach((p, i) => { const t = p.toLowerCase(); if (words.every(w => t.includes(w))) textMatchSet.add(i); });
+  }
+  return textMatchSet;
+}
+
 function filteredIndex() {
   const c = D.cols, F = D.funds, L = D.lists;
   const fam = new Set(state.families), lab = new Set(state.labels), sty = new Set(state.styles);
   const typ = new Set(state.types.map(t => L.stance.indexOf(t)));
   const top = new Set(state.topics.map(t => L.category.indexOf(t)));
   const com = new Set(state.companies);
+  const txt = textMatches();
   const fundOk = F.map(f => (!fam.size || fam.has(f.family)) && (!lab.size || lab.has(f.label)) && (!sty.size || sty.has(f.style)));
   const out = [];
   for (let i = 0; i < D.n; i++) {
@@ -62,6 +99,7 @@ function filteredIndex() {
     if (typ.size && !typ.has(c.st[i])) continue;
     if (top.size && !top.has(c.cat[i])) continue;
     if (com.size && !com.has(c.c[i])) continue;
+    if (txt && !txt.has(c.p[i])) continue;
     out.push(i);
   }
   return out;
@@ -73,6 +111,22 @@ function breakdownKey(i) {
   if (state.breakdown === 'family') return f.family;
   if (state.breakdown === 'label') return f.label === 'ESG' ? 'ESG-labeled funds' : 'Conventional funds';
   return f.name;
+}
+
+// ---------------------------------------------------------------------------
+// Time: proxy season (July-June, as in the report) or calendar meeting quarter.
+// ---------------------------------------------------------------------------
+let SEASON_OF_Q = [], SEASONS = []; // quarter index -> season index; season labels
+function buildSeasons() {
+  SEASONS = []; SEASON_OF_Q = [];
+  D.lists.quarter.forEach((q) => {
+    const y = Number(q.slice(0, 4)), n = Number(q.slice(-1));
+    const start = n >= 3 ? y : y - 1;
+    const label = `${start}–${String((start + 1) % 100).padStart(2, '0')}`;
+    let i = SEASONS.indexOf(label);
+    if (i < 0) { SEASONS.push(label); i = SEASONS.length - 1; }
+    SEASON_OF_Q.push(i);
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -108,6 +162,28 @@ function drawChipGroup(containerId, options, key, labelOf = x => x) {
       state[key] = next.length === options.length ? [] : next; // everything = no filter
       drawChipGroup(containerId, options, key, labelOf);
       queueRender();
+    });
+    box.appendChild(b);
+  });
+}
+
+const sameSet = (a, b) => a.length === b.length && a.every(x => b.includes(x));
+function presetMatches(p) {
+  const s = { ...defaults(), ...p.state };
+  return ['families', 'labels', 'styles', 'types', 'topics', 'companies'].every(k => sameSet(state[k], s[k]))
+    && state.measure === s.measure && state.breakdown === s.breakdown && state.text.trim() === ''
+    && state.qFrom === 0 && state.qTo === LAST_Q;
+}
+function drawPresets() {
+  const box = document.getElementById('preset-chips');
+  box.innerHTML = '';
+  PRESETS.forEach((p) => {
+    const b = chip(p.label, presetMatches(p));
+    b.addEventListener('click', () => {
+      state = { ...defaults(), ...p.state, time: state.time };
+      document.getElementById('f-text').value = '';
+      drawAllFilters();
+      render();
     });
     box.appendChild(b);
   });
@@ -170,7 +246,7 @@ function setupCompanySearch() {
     matches = [...starts, ...contains].slice(0, 8);
     cursor = matches.length ? 0 : -1;
     list.innerHTML = matches.length
-      ? matches.map(([i, n], k) => `<li role="option" id="cs-${i}" data-ci="${i}" aria-selected="${k === cursor}">${n.replace(/</g, '&lt;')}</li>`).join('')
+      ? matches.map(([i, n], k) => `<li role="option" id="cs-${i}" data-ci="${i}" aria-selected="${k === cursor}">${n.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</li>`).join('')
       : '<li class="empty">No matching company</li>';
     list.hidden = false;
     input.setAttribute('aria-expanded', 'true');
@@ -199,9 +275,9 @@ function setupCompanySearch() {
   input.addEventListener('blur', () => setTimeout(close, 100));
 }
 
-const FAMILY_ORDER = ['Vanguard', 'BlackRock', 'State Street', 'Fidelity', 'Capital Group', 'Parnassus', 'Calvert', 'Domini', 'Impax', 'Green Century'];
 let TOPICS = [];
 function drawAllFilters() {
+  drawPresets();
   drawChipGroup('family-chips', FAMILY_ORDER, 'families');
   drawChipGroup('label-chips', ['Conventional', 'ESG'], 'labels', l => (l === 'ESG' ? 'ESG-labeled' : 'Conventional'));
   drawChipGroup('style-chips', ['Index', 'Active'], 'styles');
@@ -209,6 +285,10 @@ function drawAllFilters() {
   drawChipGroup('topic-chips', TOPICS, 'topics', TOPIC_LABEL);
   syncSlider();
   drawCompanyChips();
+  setSwitch('measure-switch', 'measure', state.measure);
+  setSwitch('breakdown-switch', 'breakdown', state.breakdown);
+  setSwitch('time-switch', 'time', state.time);
+  document.getElementById('f-text').value = state.text;
 }
 
 function setSwitch(id, attr, value) {
@@ -218,17 +298,16 @@ function setSwitch(id, attr, value) {
 function setupControls() {
   setupSlider();
   setupCompanySearch();
-  document.querySelectorAll('#measure-switch button').forEach(btn => btn.addEventListener('click', () => {
-    state.measure = btn.dataset.measure; setSwitch('measure-switch', 'measure', state.measure); render();
+  const wire = (id, attr, key) => document.querySelectorAll(`#${id} button`).forEach(btn => btn.addEventListener('click', () => {
+    state[key] = btn.dataset[attr]; setSwitch(id, attr, state[key]); render();
   }));
-  document.querySelectorAll('#breakdown-switch button').forEach(btn => btn.addEventListener('click', () => {
-    state.breakdown = btn.dataset.breakdown; setSwitch('breakdown-switch', 'breakdown', state.breakdown); render();
-  }));
+  wire('measure-switch', 'measure', 'measure');
+  wire('breakdown-switch', 'breakdown', 'breakdown');
+  wire('time-switch', 'time', 'time');
+  const text = document.getElementById('f-text');
+  text.addEventListener('input', () => { state.text = text.value; queueRender(); });
   document.getElementById('btn-reset').addEventListener('click', () => {
-    Object.assign(state, { families: [], labels: [], styles: [], types: [], topics: [], companies: [],
-      qFrom: 0, qTo: D.lists.quarter.length - 1, measure: 'for', breakdown: 'group' });
-    setSwitch('measure-switch', 'measure', 'for');
-    setSwitch('breakdown-switch', 'breakdown', 'group');
+    state = defaults();
     document.getElementById('f-company-search').value = '';
     drawAllFilters();
     render();
@@ -250,16 +329,30 @@ function setupControls() {
     a.download = `${btn.dataset.download}.png`;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   }));
+  // Sortable table headers.
+  document.querySelectorAll('#data-table th.sortable').forEach(th => {
+    const go = () => {
+      const col = th.dataset.sort;
+      sort = sort.col === col ? { col, dir: sort.dir === 'asc' ? 'desc' : 'asc' } : { col, dir: col === 'date' ? 'desc' : 'asc' };
+      render();
+    };
+    th.addEventListener('click', go);
+    th.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+  });
 }
 
-// Shareable links: multi-select filters repeat their parameter.
+// Shareable links: multi-select filters repeat their parameter. Only values
+// that differ from the defaults are written, and "all proposal types" (which
+// is not the default) is written as type=all.
 function applyStateFromURL() {
   const p = new URLSearchParams(location.search), L = D.lists;
+  const d = defaults();
   const keep = (vals, ok) => vals.filter(ok);
+  state = d;
   state.families = keep(p.getAll('family'), v => FAMILY_ORDER.includes(v));
   state.labels = keep(p.getAll('label'), v => ['Conventional', 'ESG'].includes(v));
   state.styles = keep(p.getAll('style'), v => ['Index', 'Active'].includes(v));
-  state.types = keep(p.getAll('type'), v => v in STANCE_LABEL);
+  if (p.has('type')) state.types = p.get('type') === 'all' ? [] : keep(p.getAll('type'), v => v in STANCE_LABEL);
   state.topics = keep(p.getAll('topic'), v => TOPICS.includes(v));
   state.companies = p.getAll('company').map(n => L.company.indexOf(n)).filter(i => i >= 0);
   const qi = v => L.quarter.indexOf(v);
@@ -268,31 +361,34 @@ function applyStateFromURL() {
   if (state.qFrom > state.qTo) [state.qFrom, state.qTo] = [state.qTo, state.qFrom];
   if (p.get('measure') in MEASURES) state.measure = p.get('measure');
   if (['group', 'family', 'fund', 'label'].includes(p.get('breakdown'))) state.breakdown = p.get('breakdown');
-  setSwitch('measure-switch', 'measure', state.measure);
-  setSwitch('breakdown-switch', 'breakdown', state.breakdown);
+  if (['season', 'quarter'].includes(p.get('time'))) state.time = p.get('time');
+  state.text = p.get('q') || '';
 }
 
 function syncURL() {
-  const p = new URLSearchParams(), L = D.lists;
+  const p = new URLSearchParams(), L = D.lists, d = defaults();
   state.families.forEach(v => p.append('family', v));
   state.labels.forEach(v => p.append('label', v));
   state.styles.forEach(v => p.append('style', v));
-  state.types.forEach(v => p.append('type', v));
+  if (!sameSet(state.types, d.types)) { if (state.types.length) state.types.forEach(v => p.append('type', v)); else p.set('type', 'all'); }
   state.topics.forEach(v => p.append('topic', v));
   state.companies.forEach(i => p.append('company', L.company[i]));
   if (state.qFrom !== 0) p.set('from', L.quarter[state.qFrom]);
   if (state.qTo !== L.quarter.length - 1) p.set('to', L.quarter[state.qTo]);
-  if (state.measure !== 'for') p.set('measure', state.measure);
-  if (state.breakdown !== 'group') p.set('breakdown', state.breakdown);
+  if (state.measure !== d.measure) p.set('measure', state.measure);
+  if (state.breakdown !== d.breakdown) p.set('breakdown', state.breakdown);
+  if (state.time !== d.time) p.set('time', state.time);
+  if (state.text.trim()) p.set('q', state.text.trim());
   const qs = p.toString();
   history.replaceState(null, '', qs ? '?' + qs : location.pathname);
 }
 
 // ---------------------------------------------------------------------------
 // Charts: built the first time each card scrolls into view (with an intro),
-// then rebuilt instantly on every filter change.
+// then rebuilt instantly on every filter change (a full re-render is ~70 ms).
 // ---------------------------------------------------------------------------
 const cardOpened = {}, pendingConfig = {};
+let redrawingForTheme = false; // true while charts are redrawn after a theme switch: no intro/animation
 function destroyChart(id) { if (charts[id]) { charts[id].destroy(); delete charts[id]; } }
 function addIntro(id, cfg) {
   const o = cfg.options = cfg.options || {};
@@ -311,7 +407,11 @@ function mountChart(id, config) {
   destroyChart(id);
   const canvas = document.getElementById(id);
   const isOpen = cardOpened[id];
-  if (isOpen && isOpen()) { charts[id] = new Chart(canvas, config); return; }
+  if (isOpen && isOpen()) {
+    if (redrawingForTheme) { config.options = config.options || {}; config.options.animation = false; }
+    charts[id] = new Chart(canvas, config);
+    return;
+  }
   pendingConfig[id] = config;
   if (isOpen) return;
   cardOpened[id] = whenCardOpens(canvas.closest('.chart-card'), () => {
@@ -322,11 +422,44 @@ function mountChart(id, config) {
   });
 }
 
+// Charts hold theme colors in their configs, so a theme switch rebuilds them all.
+ESG_ON_THEME_CHANGE(() => {
+  if (!D) return;
+  Object.keys(charts).forEach(destroyChart);
+  redrawingForTheme = true;
+  try { render(); } finally { redrawingForTheme = false; }
+});
+
+// ---------------------------------------------------------------------------
+// Table sorting: dictionaries are ranked once so sorting 300k rows compares integers.
+// ---------------------------------------------------------------------------
+let RANK = null;
+function buildRanks() {
+  const rankOf = (arr, cmp) => { const order = arr.map((_, i) => i).sort((a, b) => cmp(arr[a], arr[b])); const r = new Array(arr.length); order.forEach((idx, k) => { r[idx] = k; }); return r; };
+  const L = D.lists;
+  RANK = {
+    date: rankOf(L.date, (a, b) => a.localeCompare(b)),
+    company: rankOf(L.company, (a, b) => a.localeCompare(b)),
+    fund: rankOf(D.funds.map(f => f.name), (a, b) => a.localeCompare(b)),
+    type: rankOf(L.stance, (a, b) => STANCE_LABEL[a].localeCompare(STANCE_LABEL[b])),
+    vote: rankOf(L.vote, (a, b) => a.localeCompare(b)),
+  };
+}
+function sortKey(col, i) {
+  const c = D.cols;
+  if (col === 'date') return RANK.date[c.d[i]];
+  if (col === 'company') return RANK.company[c.c[i]];
+  if (col === 'fund') return RANK.fund[c.f[i]];
+  if (col === 'type') return RANK.type[c.st[i]];
+  return RANK.vote[c.v[i]];
+}
+
 function render() {
   syncURL();
   const C = window.ESG_COLORS, L = D.lists, c = D.cols;
   const idx = filteredIndex();
   const m = state.measure, M = MEASURES[m];
+  drawPresets();
 
   // --- Summary tiles ---
   const all = tally();
@@ -340,49 +473,87 @@ function render() {
   const valueAxis = { beginAtZero: true, grid: { color: C.grid }, ticks: { color: C.muted, callback: v => (M.pct ? v + '%' : Number(v).toLocaleString()) } };
   if (M.pct) { valueAxis.min = 0; valueAxis.max = 100; }
   const tip = ctx => `${ctx.dataset.label ? ctx.dataset.label + ': ' : ''}${fmtMeasure(ctx.parsed[ctx.chart.options.indexAxis === 'y' ? 'x' : 'y'])}`;
+
+  // Colors: a fixed hue per group, per label, and per family (a fund uses its
+  // family's hue). Funds in one family are told apart by line dash / bar order.
+  const fundByName = new Map(D.funds.map(f => [f.name, f]));
   const colorFor = (key, i) => {
-    if (state.breakdown === 'group') return C.series[GROUPS.indexOf(key)] || C.series[i % 8];
+    if (state.breakdown === 'group') return C.series[GROUPS.indexOf(key)] ?? C.series[i % 8];
     if (state.breakdown === 'label') return key.startsWith('ESG') ? C.series[2] : C.series[0];
-    return C.series[i % 8];
+    if (state.breakdown === 'family') return C.series[FAMILY_COLOR[key] ?? (i % 10)];
+    const f = fundByName.get(key);
+    return C.series[f ? FAMILY_COLOR[f.family] : (i % 10)];
   };
 
   // --- Groups for the chosen breakdown (ordered by votes in view) ---
+  const slotOfQ = q => (state.time === 'season' ? SEASON_OF_Q[q] : q);
   const groups = new Map();
-  idx.forEach(i => { const k = breakdownKey(i); if (!groups.has(k)) groups.set(k, { total: tally(), byQ: new Map() }); const g = groups.get(k); add(g.total, i); if (!g.byQ.has(c.q[i])) g.byQ.set(c.q[i], tally()); add(g.byQ.get(c.q[i]), i); });
+  idx.forEach(i => {
+    const k = breakdownKey(i);
+    if (!groups.has(k)) groups.set(k, { total: tally(), bySlot: new Map() });
+    const g = groups.get(k);
+    add(g.total, i);
+    const s = slotOfQ(c.q[i]);
+    if (!g.bySlot.has(s)) g.bySlot.set(s, tally());
+    add(g.bySlot.get(s), i);
+  });
   let groupKeys = [...groups.keys()];
   if (state.breakdown === 'group') groupKeys.sort((a, b) => GROUPS.indexOf(a) - GROUPS.indexOf(b));
   else if (state.breakdown === 'family') groupKeys.sort((a, b) => FAMILY_ORDER.indexOf(a) - FAMILY_ORDER.indexOf(b));
   else groupKeys.sort((a, b) => groups.get(b).total.n - groups.get(a).total.n);
 
-  // --- Chart 1: by meeting quarter (up to 8 lines) ---
+  // --- Chart 1: trend, by proxy season or meeting quarter ---
   {
-    const qs = []; for (let q = state.qFrom; q <= state.qTo; q++) qs.push(q);
-    const keys = groupKeys.slice(0, 8);
+    const slots = [];
+    for (let q = state.qFrom; q <= state.qTo; q++) { const s = slotOfQ(q); if (!slots.includes(s)) slots.push(s); }
+    const slotLabel = s => (state.time === 'season' ? SEASONS[s] : L.quarter[s]);
+    document.getElementById('trend-title').textContent = state.time === 'season' ? 'By proxy season' : 'By meeting quarter';
+    // Lines: the ones with the most votes in view, at most MAX_LINES.
+    const byVotes = groupKeys.slice().sort((a, b) => groups.get(b).total.n - groups.get(a).total.n);
+    const keys = groupKeys.filter(k => byVotes.indexOf(k) < MAX_LINES);
+    let hidden = 0;
+    const famSeen = {};
+    const datasets = keys.map((k, i) => {
+      const g = groups.get(k);
+      const color = colorFor(k, i);
+      const f = state.breakdown === 'fund' ? fundByName.get(k) : null;
+      const dashIdx = f ? (famSeen[f.family] = (famSeen[f.family] ?? -1) + 1) : 0;
+      const counts = [];
+      const data = slots.map(s => {
+        const t = g.bySlot.get(s);
+        if (!t) { counts.push(0); return null; }
+        counts.push(basisOf(t));
+        if (m !== 'count' && basisOf(t) < MIN_POINT_N) { hidden++; return null; }
+        return round1(measureOf(t));
+      });
+      return {
+        label: k, data, counts,
+        borderColor: color, backgroundColor: color + '1a',
+        borderDash: DASHES[dashIdx % DASHES.length],
+        borderWidth: 2.5, pointRadius: 3.5, pointHoverRadius: 6, tension: 0.2, spanGaps: false,
+        pointBackgroundColor: color, pointBorderColor: C.surface, pointBorderWidth: 2,
+      };
+    });
+    const notes = [];
+    if (groupKeys.length > MAX_LINES) notes.push(`Showing the ${MAX_LINES} of ${groupKeys.length} with the most votes in view; filter to one family or group to see the rest.`);
+    if (hidden) notes.push(`Points built on fewer than ${MIN_POINT_N} votes are hidden.`);
+    document.getElementById('trend-note').textContent = notes.join(' ');
     mountChart('chart-trend', {
       type: 'line',
-      data: {
-        labels: qs.map(q => L.quarter[q]),
-        datasets: keys.map((k, i) => ({
-          label: k,
-          data: qs.map(q => { const t = groups.get(k).byQ.get(q); return t ? round1(measureOf(t)) : null; }),
-          borderColor: colorFor(k, i), backgroundColor: colorFor(k, i) + '1a',
-          borderWidth: 2.5, pointRadius: 3, pointHoverRadius: 6, tension: 0.2, spanGaps: true,
-          pointBackgroundColor: colorFor(k, i), pointBorderColor: C.surface, pointBorderWidth: 2,
-        })),
-      },
+      data: { labels: slots.map(slotLabel), datasets },
       options: {
         responsive: true, maintainAspectRatio: false,
         interaction: { mode: 'nearest', intersect: false },
         plugins: {
           legend: { display: keys.length > 1, position: 'bottom' },
-          tooltip: { callbacks: { label: tip } },
+          tooltip: { callbacks: { label: ctx => `${tip(ctx)} (${ctx.dataset.counts[ctx.dataIndex].toLocaleString()} votes)` } },
         },
         scales: { x: { grid: { display: false }, ticks: { color: C.muted } }, y: { ...valueAxis, title: { display: true, text: M.label, color: C.textSecondary, font: { size: 12 } } } },
       },
     });
   }
 
-  // --- Chart 2: all quarters in view, by breakdown ---
+  // --- Chart 2: everything in view, by breakdown ---
   {
     const horizontal = groupKeys.length > 4;
     document.getElementById('groups-holder').style.height = horizontal ? `${Math.max(280, 34 * groupKeys.length + 70)}px` : '300px';
@@ -397,7 +568,7 @@ function render() {
         layout: { padding: horizontal ? { right: 50 } : { top: 26 } },
         plugins: {
           legend: { display: false },
-          tooltip: { callbacks: { label: tip } },
+          tooltip: { callbacks: { label: ctx => `${fmtMeasure(ctx.parsed[horizontal ? 'x' : 'y'])} (${basisOf(groups.get(groupKeys[ctx.dataIndex]).total).toLocaleString()} votes)` } },
           esgAnnotate: { valueLabels: M.pct ? { suffix: '%', decimals: 1 } : { decimals: 0 } },
         },
         scales: horizontal
@@ -456,24 +627,34 @@ function render() {
     });
   }
 
-  // --- Table ---
+  // --- Table (sorted over every matching vote, then capped) ---
   const CAP = 500;
-  // Most recent meetings first (dates are stored in first-seen order, so compare the strings).
-  const shown = idx.slice()
-    .sort((a, b) => L.date[c.d[b]].localeCompare(L.date[c.d[a]]) || L.company[c.c[a]].localeCompare(L.company[c.c[b]]))
-    .slice(0, CAP);
+  const dir = sort.dir === 'asc' ? 1 : -1;
+  const shown = idx.slice().sort((a, b) =>
+    dir * (sortKey(sort.col, a) - sortKey(sort.col, b))
+    || (RANK.date[c.d[b]] - RANK.date[c.d[a]])
+    || (RANK.company[c.c[a]] - RANK.company[c.c[b]])).slice(0, CAP);
+  document.querySelectorAll('#data-table th.sortable').forEach(th => {
+    if (th.dataset.sort === sort.col) th.setAttribute('aria-sort', sort.dir === 'asc' ? 'ascending' : 'descending');
+    else th.removeAttribute('aria-sort');
+  });
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
   document.getElementById('table-body').innerHTML = shown.map(i => {
     const f = D.funds[c.f[i]];
     const wm = c.wm[i];
+    const st = L.stance[c.st[i]];
+    const rule = L.rule[D.proposalRule[c.p[i]]];
+    const typeText = STANCE_LABEL[st].replace('Shareholder: ', 'SH: ').replace(' proposals', '');
     return `<tr>
       <td>${L.date[c.d[i]]}</td><td>${esc(L.company[c.c[i]])}</td><td>${esc(f.name)}</td>
-      <td class="proposal-cell">${esc(L.proposal[c.p[i]])}</td><td>${STANCE_LABEL[L.stance[c.st[i]]].replace('Shareholder: ', 'SH: ').replace(' proposals', '')}</td>
+      <td class="proposal-cell">${esc(L.proposal[c.p[i]])}</td>
+      <td>${typeText}${rule ? `<span class="rule-note">${esc(rule)}</span>` : ''}</td>
       <td class="${wm === 0 ? 'vote-against' : ''}">${L.vote[c.v[i]]}</td><td>${L.vsMgmt[c.mr[i]]}</td>
     </tr>`;
   }).join('') || '<tr><td colspan="7" class="loading-note">No votes match these filters.</td></tr>';
+  const sortName = { date: 'most recent', company: 'company A–Z', fund: 'fund A–Z', type: 'type', vote: 'vote' }[sort.col];
   document.getElementById('result-count').textContent = idx.length > CAP
-    ? `Showing the ${CAP.toLocaleString()} most recent of ${idx.length.toLocaleString()} matching votes. Narrow the filters to see others.`
+    ? `Showing ${CAP.toLocaleString()} of ${idx.length.toLocaleString()} matching votes (sorted by ${sortName}). Narrow the filters to see others.`
     : `${idx.length.toLocaleString()} matching vote${idx.length === 1 ? '' : 's'}.`;
 }
 
@@ -490,13 +671,13 @@ function TOPIC_LABEL(t) {
 
 function exportCSV() {
   const L = D.lists, c = D.cols;
-  const cols = ['meeting_date', 'quarter', 'company', 'fund', 'family', 'group', 'label', 'style', 'proposal', 'type', 'topic', 'vote', 'with_management'];
+  const cols = ['meeting_date', 'quarter', 'company', 'fund', 'family', 'group', 'label', 'style', 'proposal', 'type', 'label_rule', 'topic', 'vote', 'with_management'];
   const cell = v => { const s = String(v ?? ''); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
   const lines = [cols.join(',')];
   filteredIndex().forEach(i => {
     const f = D.funds[c.f[i]];
     lines.push([L.date[c.d[i]], L.quarter[c.q[i]], L.company[c.c[i]], f.name, f.family, f.group, f.label, f.style,
-      L.proposal[c.p[i]], L.stance[c.st[i]], L.category[c.cat[i]], L.vote[c.v[i]], c.wm[i] === 1 ? 'Y' : c.wm[i] === 0 ? 'N' : ''].map(cell).join(','));
+      L.proposal[c.p[i]], L.stance[c.st[i]], L.rule[D.proposalRule[c.p[i]]], L.category[c.cat[i]], L.vote[c.v[i]], c.wm[i] === 1 ? 'Y' : c.wm[i] === 0 ? 'N' : ''].map(cell).join(','));
   });
   const url = URL.createObjectURL(new Blob([lines.join('\n')], { type: 'text/csv' }));
   const a = document.createElement('a');
@@ -505,17 +686,29 @@ function exportCSV() {
   URL.revokeObjectURL(url);
 }
 
-fetch('data/site_votes.json').then(r => r.json()).then(data => {
-  D = data;
-  IS_CAST = D.lists.vote.map(v => ['FOR', 'AGAINST', 'ABSTAIN', 'WITHHOLD'].includes(v));
-  IS_FOR = D.lists.vote.map(v => v === 'FOR');
-  TOPICS = [...D.lists.category].sort((a, b) => TOPIC_LABEL(a).localeCompare(TOPIC_LABEL(b)));
-  state.qTo = D.lists.quarter.length - 1;
-  setupControls();
-  applyStateFromURL();
-  drawAllFilters();
-  render();
-}).catch(err => {
-  document.getElementById('table-body').innerHTML =
-    `<tr><td colspan="7" class="loading-note">Could not load the data (${err.message}). Try reloading.</td></tr>`;
-});
+function showFatal(message) {
+  document.getElementById('table-body').innerHTML = `<tr><td colspan="7" class="loading-note">${message}</td></tr>`;
+  const box = document.getElementById('load-error');
+  box.textContent = message;
+  box.hidden = false;
+}
+
+if (!window.Chart) {
+  showFatal('The charting library could not be loaded (check your connection or an ad/script blocker). Try reloading.');
+} else {
+  document.querySelector('main').classList.add('is-loading');
+  fetch('data/site_votes.json').then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }).then(data => {
+    D = data;
+    IS_CAST = D.lists.vote.map(v => ['FOR', 'AGAINST', 'ABSTAIN', 'WITHHOLD'].includes(v));
+    IS_FOR = D.lists.vote.map(v => v === 'FOR');
+    TOPICS = [...D.lists.category].sort((a, b) => TOPIC_LABEL(a).localeCompare(TOPIC_LABEL(b)));
+    LAST_Q = D.lists.quarter.length - 1;
+    buildSeasons();
+    buildRanks();
+    setupControls();
+    applyStateFromURL();
+    drawAllFilters();
+    document.querySelector('main').classList.remove('is-loading');
+    render();
+  }).catch(err => showFatal(`Could not load the votes (${err.message}). Try reloading.`));
+}

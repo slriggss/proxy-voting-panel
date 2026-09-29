@@ -25,7 +25,7 @@ const PERIODS = { '2024-06-30': 2024, '2025-06-30': 2025, '2026-06-30': 2026 };
 const ROOT = path.join(__dirname, '..');
 const RAW = path.join(ROOT, 'data', 'raw');
 
-// group: Big Three / Active managers / ESG families
+// group: Big Three / Other large managers / ESG families
 // style: Index or Active; label: Conventional or ESG
 const FUNDS = [
   { id: 'S000002839', cik: 36405,   family: 'Vanguard',      group: 'Big Three',       style: 'Index',  label: 'Conventional', fund: 'Vanguard 500 Index Fund' },
@@ -38,12 +38,12 @@ const FUNDS = [
   { id: 'S000006983', cik: 1064642, family: 'State Street',  group: 'Big Three',       style: 'Index',  label: 'Conventional', fund: 'SPDR Portfolio S&P 500 ETF' },
   { id: 'S000069051', cik: 1064642, family: 'State Street',  group: 'Big Three',       style: 'Index',  label: 'ESG',          fund: 'SPDR S&P 500 ESG ETF' },
   { id: 'S000053058', cik: 1064642, family: 'State Street',  group: 'Big Three',       style: 'Index',  label: 'ESG',          fund: 'SPDR MSCI USA Gender Diversity Index ETF' },
-  { id: 'S000006027', cik: 819118,  family: 'Fidelity',      group: 'Active managers', style: 'Index',  label: 'Conventional', fund: 'Fidelity 500 Index Fund' },
-  { id: 'S000006037', cik: 24238,   family: 'Fidelity',      group: 'Active managers', style: 'Active', label: 'Conventional', fund: 'Fidelity Contrafund' },
-  { id: 'S000057366', cik: 35315,   family: 'Fidelity',      group: 'Active managers', style: 'Index',  label: 'ESG',          fund: 'Fidelity U.S. Sustainability Index Fund' },
-  { id: 'S000072129', cik: 225322,  family: 'Fidelity',      group: 'Active managers', style: 'Active', label: 'ESG',          fund: 'Fidelity Sustainable U.S. Equity Fund' },
-  { id: 'S000009228', cik: 44201,   family: 'Capital Group', group: 'Active managers', style: 'Active', label: 'Conventional', fund: 'The Growth Fund of America' },
-  { id: 'S000009388', cik: 104865,  family: 'Capital Group', group: 'Active managers', style: 'Active', label: 'Conventional', fund: 'Washington Mutual Investors Fund' },
+  { id: 'S000006027', cik: 819118,  family: 'Fidelity',      group: 'Other large managers', style: 'Index',  label: 'Conventional', fund: 'Fidelity 500 Index Fund' },
+  { id: 'S000006037', cik: 24238,   family: 'Fidelity',      group: 'Other large managers', style: 'Active', label: 'Conventional', fund: 'Fidelity Contrafund' },
+  { id: 'S000057366', cik: 35315,   family: 'Fidelity',      group: 'Other large managers', style: 'Index',  label: 'ESG',          fund: 'Fidelity U.S. Sustainability Index Fund' },
+  { id: 'S000072129', cik: 225322,  family: 'Fidelity',      group: 'Other large managers', style: 'Active', label: 'ESG',          fund: 'Fidelity Sustainable U.S. Equity Fund' },
+  { id: 'S000009228', cik: 44201,   family: 'Capital Group', group: 'Other large managers', style: 'Active', label: 'Conventional', fund: 'The Growth Fund of America' },
+  { id: 'S000009388', cik: 104865,  family: 'Capital Group', group: 'Other large managers', style: 'Active', label: 'Conventional', fund: 'Washington Mutual Investors Fund' },
   { id: 'S000000856', cik: 866256,  family: 'Parnassus',     group: 'ESG families',    style: 'Active', label: 'ESG',          fund: 'Parnassus Core Equity Fund' },
   { id: 'S000005145', cik: 1105446, family: 'Calvert',       group: 'ESG families',    style: 'Index',  label: 'ESG',          fund: 'Calvert US Large-Cap Core Responsible Index Fund' },
   { id: 'S000008719', cik: 356682,  family: 'Calvert',       group: 'ESG families',    style: 'Active', label: 'ESG',          fund: 'Calvert Equity Fund' },

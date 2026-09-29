@@ -34,29 +34,33 @@ const RULES = [
   ['anti-ESG', 'charitable giving discrimination', /discrimination[^.]{0,40}charitab|charitab[^.]{0,60}discrimination/i],
   ['anti-ESG', 'ESG pay metrics / returns', /non-fiduciary|(revisit|remove|eliminate)[^.]{0,30}(\bde[il]\b|diversity|esg)[^.]{0,30}(pay|compensation|incentive)|risks? of (esg|\bdei\b)[^.]{0,30}(compensation|pay|metrics)|esg roi|stakeholder capitalism|meritocra|misalignment between[^.]{0,60}customer/i],
 
+  // --- pay tied to ESG goals, and living-income asks (found by the hand audit) ---
+  ['pro-ESG', 'ESG-linked pay', /(incentive|compensation|pay|bonus)[^.]{0,60}\b(esg|sustainability|climate|diversity)\b[^.]{0,20}(objectives|metrics|targets|goals|performance)|(esg|climate|sustainability)[- ]linked (pay|compensation|incentive)/i],
+  ['pro-ESG', 'human rights & labor', /living income/i],
+
   // --- filed by both camps ------------------------------------------------
   ['unclear', 'charitable giving', /charitable/i],
   // (second-chance hiring and AI's effect on jobs are pro-ESG labor asks)
   ['pro-ESG', 'human rights & labor', /incarcerat|arrest[^.]{0,20}record|second[- ]chance|workforce impact of a[il]\b/i],
   ['pro-ESG', 'human rights & labor', /non-? ?interference|paid sick leave|safety practices|protected classes|railroad safety|responsible sourcing|same amount of benefit/i],
-  ['pro-ESG', 'climate & environment', /circular economy|operations waste|global warming|road wear|nuclear/i],
+  ['pro-ESG', 'climate & environment', /circular economy|operations waste|global warming|road wear|nuclear|lead[- ]sheathed/i],
   ['pro-ESG', 'health, safety & product impact', /quality (of )?(accessible medical )?care|social media|rekognition|public benefit corporation/i],
-  ['unclear', 'other two-sided topics', /hiring practices|adoption of automation|immigration|merchant category code|sweetener|ingredient|greenwash|advertising risk|ad buyer|brand image|protect retirement benefits|data center costs|proxy voting|voting preferences|retirement plan investment|takedown|take down|electromagnetic|farmers|corporate (contributions|giving)/i],
+  ['unclear', 'other two-sided topics', /hiring practices|adoption of automation|immigration|merchant category code|sweetener|ingredient|greenwash|advertising risk|ad buyer|brand image|protect retirement benefits|data center costs|proxy voting|voting preferences|retirement plan investment|takedown|take down|electromagnetic|corporate (contributions|giving)/i],
 
   // --- pro-ESG ------------------------------------------------------------
-  ['pro-ESG', 'climate & environment', /climate|emission|ghg|greenhouse|carbon|paris|net[- ]zero|scope 3|fossil|renewable|clean energy|deforest|plastic|packaging|recycl|water|biodiversity|nature|methane|pollut|environment|sustainab|toxic|pesticide|chemical|energy efficiency|coal|oil and gas|data centers|energy (supply )?(financing )?ratio|just transition|transition finance|extended producer|filter cleanup|cigarette waste|deep sea mining|stakeholder impact|social impact|plant-based/i],
-  ['pro-ESG', 'human rights & labor', /human rights|indigenous|child labor|forced labor|worker|workforce|labor|freedom of association|collective bargaining|living wage|wage|workplace safety|heat|working conditions|supply chain|due diligence|conflict|illegal settlements|defense-related|ethical impact/i],
+  ['pro-ESG', 'climate & environment', /climate|emission|ghg|greenhouse|carbon|paris|net[- ]zero|scope 3|fossil|renewable|clean energy|deforest|plastic|packaging|recycl|\bwater|biodiversity|\bnature\b|methane|pollut|environment|sustainab|toxic|pesticide|\bchemical|energy efficiency|\bcoal\b|oil and gas|data centers|energy (supply )?(financing )?ratio|just transition|transition finance|extended producer|filter cleanup|cigarette waste|deep sea mining|stakeholder impact|social impact|plant-based/i],
+  ['pro-ESG', 'human rights & labor', /human rights|indigenous|child labor|forced labor|worker|workforce|\blabor|freedom of association|collective bargaining|living wage|\bwages?\b|workplace safety|\bheat\b|working conditions|supply chain|due diligence|\bconflict(?! of interest)|illegal settlements|defense-related|ethical impact/i],
   ['pro-ESG', 'diversity, equity & pay gaps', /diversity|inclusion|\bdei\b|racial|gender|pay (gap|equity)|equal pay|eeo|civil rights|discriminat|harassment|reproductive|abortion|women|demographic|disabilit/i],
   ['pro-ESG', 'political spending & lobbying disclosure', /lobbying|political|congruen/i],
-  ['pro-ESG', 'animal welfare', /animal|cage|pork|gestation|antibiotic|primate|poultry|chicken|egg/i],
-  ['pro-ESG', 'health, safety & product impact', /health|tobacco|smok|nicotine|opioid|drug pric|access to medicine|patent|affordab|food|nutrition|child(ren)?'?s? (safety|online)|online safety|gun|firearm|weapon|patient safety|quality of care/i],
+  ['pro-ESG', 'animal welfare', /animal|\bcage|\bpork|gestation|antibiotic|primate|poultry|chicken|\beggs?\b/i],
+  ['pro-ESG', 'health, safety & product impact', /health|tobacco|smok|nicotine|opioid|drug pric|access to medicine|patent|affordab|\bfood\b|nutrition|child(ren)?'?s? (safety|online)|online safety|\bguns?\b|firearm|weapon|patient safety|quality of care/i],
   // Some filers render "AI" as "Al" (lower-case L).
-  ['pro-ESG', 'AI, data & digital rights', /artificial intelligence|\bai\b|\ba[il]\b[^.]{0,25}(data|bias|usage|oversight|chatbot|model|misinformation)|chatbot|generative|algorithm|privacy|customer data|(use of|report on) a[il]\b|law enforcement|digital services|customer use of|tax practices|misinformation|disinformation|surveillance|facial recognition|hate|antisemit|exploitation|deepfake|content moderation/i],
+  ['pro-ESG', 'AI, data & digital rights', /artificial intelligence|\bai\b|\ba[il]\b[^.]{0,25}(data|bias|usage|oversight|chatbot|model|misinformation)|chatbot|generative|algorithm|privacy|customer data|(use of|report on) a[il]\b|law enforcement|digital services|customer use of|tax practices|misinformation|disinformation|surveillance|facial recognition|\bhate\b|antisemit|exploitation|deepfake|content moderation/i],
   ['pro-ESG', 'tax transparency', /tax transparen|country-by-country/i],
 
   // --- governance and pay ---------------------------------------------------
   ['governance', 'shareholder rights & board', /special meeting|written consent|declassif|majority vote|simple majority|supermajority|proxy access|independent (board )?chair|chair(man)? .*independent|poison pill|dual[- ]class|one vote per share|equal voting|director|board|bylaw|charter|nominat|term limit|annual election|cumulative voting|shareholder approval|advisory vote|ratif/i],
-  ['governance', 'executive pay', /compensation|pay|severance|golden parachute|clawback|bonus|equity awards?|stock options?|retention|incentive/i],
+  ['governance', 'executive pay', /compensation|\bpay|severance|golden parachute|clawback|bonus|equity awards?|stock options?|retention|incentive/i],
 ];
 
 // Strip the boilerplate filers wrap around proposal titles.
@@ -64,7 +68,8 @@ function clean(text) {
   return String(text)
     .replace(/^(to (vote on|act upon|consider)|vote on|approve request on)\s+/i, '')
     .replace(/^(a )?(shareholder|stockholder|share ?holder|shareowner)s?( proposal)?s?[\s:,-]*(entitled|regarding|requesting|relating to|seeking|on|to|for|that)?\s*/i, '')
-    .replace(/,? if (properly )?presented.*$/i, '')
+    .replace(/,?\s*if (properly )?presented( at (the|our) (annual |special )?meeting( of (share|stock)holders)?)?,?/i, ' ')
+    .replace(/\s+/g, ' ')
     .trim();
 }
 
